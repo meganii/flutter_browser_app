@@ -8,6 +8,8 @@ import 'package:flutter_browser/tab_viewer.dart';
 import 'package:flutter_browser/util.dart';
 import 'package:flutter_browser/webview_tab.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:html/parser.dart' show parse;
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import 'app_bar/tab_viewer_app_bar.dart';
@@ -162,116 +164,159 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
 
     var currentTab = browserModel.getCurrentTab();
 
+    Future<String?> fetchPageTitle(String url) async {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final document = parse(response.body);
+        final title = document.querySelector('title')?.text;
+        return title;
+      }
+      return null;
+    }
+
     var stackChildren = <Widget>[
       Expanded(child: currentTab ?? Container()),
       _createProgressIndicator(),
       if (isKeyboardShown)
-        SizedBox(
+        Container(
             height: 40,
-            child: Container(
-              color: Colors.black12,
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(1.0),
-                    child: IconButton(
-                      onPressed: () async {
-                        currentTab?.webViewModel.webViewController
-                            ?.evaluateJavascript(source: 'sbmobyOutdent();');
-                      },
-                      icon: const Icon(
-                        Icons.chevron_left,
-                      ),
+            color: Colors.black12,
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: IconButton(
+                    onPressed: () async {
+                      currentTab?.webViewModel.webViewController
+                          ?.evaluateJavascript(source: 'sbmobyOutdent();');
+                    },
+                    icon: const Icon(
+                      Icons.chevron_left,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(1.0),
-                    child: IconButton(
-                      onPressed: () async {
-                        currentTab?.webViewModel.webViewController
-                            ?.evaluateJavascript(source: 'sbmobyIndent();');
-                      },
-                      icon: const Icon(
-                        Icons.chevron_right,
-                      ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: IconButton(
+                    onPressed: () async {
+                      currentTab?.webViewModel.webViewController
+                          ?.evaluateJavascript(source: 'sbmobyIndent();');
+                    },
+                    icon: const Icon(
+                      Icons.chevron_right,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(1.0),
-                    child: IconButton(
-                      onPressed: () async {
-                        currentTab?.webViewModel.webViewController
-                            ?.evaluateJavascript(source: 'sbmobyUpLines();');
-                      },
-                      icon: const Icon(
-                        Icons.expand_less,
-                      ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: IconButton(
+                    onPressed: () async {
+                      currentTab?.webViewModel.webViewController
+                          ?.evaluateJavascript(source: 'sbmobyUpLines();');
+                    },
+                    icon: const Icon(
+                      Icons.expand_less,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(1.0),
-                    child: IconButton(
-                      onPressed: () async {
-                        currentTab?.webViewModel.webViewController
-                            ?.evaluateJavascript(source: 'sbmobyDownLines();');
-                      },
-                      icon: const Icon(
-                        Icons.expand_more,
-                      ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: IconButton(
+                    onPressed: () async {
+                      currentTab?.webViewModel.webViewController
+                          ?.evaluateJavascript(source: 'sbmobyDownLines();');
+                    },
+                    icon: const Icon(
+                      Icons.expand_more,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(1.0),
-                    child: IconButton(
-                      onPressed: () async {
-                        currentTab?.webViewModel.webViewController
-                            ?.evaluateJavascript(source: 'sbmobyCut();');
-                      },
-                      icon: const Icon(
-                        Icons.content_cut,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(1.0),
-                    child: IconButton(
-                      onPressed: () async {
-                        currentTab?.webViewModel.webViewController
-                            ?.evaluateJavascript(source: 'sbmobyUndo();');
-                      },
-                      icon: const Icon(
-                        Icons.replay,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(1.0),
-                    child: IconButton(
-                      onPressed: () async {
-                        currentTab?.webViewModel.webViewController
-                            ?.evaluateJavascript(source: 'sbmobyAddIcon();');
-                      },
-                      icon: const Icon(
-                        Icons.face,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(1.0),
-                    child: GestureDetector(
-                      onLongPressEnd: (LongPressEndDetails details) {},
-                      onTap: () async {
-                        currentTab?.webViewModel.webViewController
-                            ?.evaluateJavascript(source: 'sbmobyBackspace();');
-                      },
-                      child: const Icon(
-                        Icons.backspace,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )),
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 5,
+                            color: Colors.black54,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(1.0),
+                            child: IconButton(
+                              onPressed: () async {
+                                currentTab?.webViewModel.webViewController
+                                    ?.evaluateJavascript(
+                                        source: 'sbmobyCut();');
+                              },
+                              icon: const Icon(
+                                Icons.content_cut,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(1.0),
+                            child: IconButton(
+                              onPressed: () async {
+                                var clipboardData = await Clipboard.getData(
+                                    Clipboard.kTextPlain);
+                                var url = clipboardData?.text ?? '';
+                                if (url.startsWith('http')) {
+                                  var title = await fetchPageTitle(url);
+                                  var text = '[$url $title]';
+                                  await Clipboard.setData(
+                                      ClipboardData(text: text));
+                                }
+                              },
+                              icon: const Icon(
+                                Icons.link,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(1.0),
+                            child: IconButton(
+                              onPressed: () async {
+                                currentTab?.webViewModel.webViewController
+                                    ?.evaluateJavascript(
+                                        source: 'sbmobyUndo();');
+                              },
+                              icon: const Icon(
+                                Icons.replay,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(1.0),
+                            child: IconButton(
+                              onPressed: () async {
+                                currentTab?.webViewModel.webViewController
+                                    ?.evaluateJavascript(
+                                        source: 'sbmobyAddIcon();');
+                              },
+                              icon: const Icon(
+                                Icons.face,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(1.0),
+                            child: GestureDetector(
+                              onLongPressEnd: (LongPressEndDetails details) {},
+                              onTap: () async {
+                                currentTab?.webViewModel.webViewController
+                                    ?.evaluateJavascript(
+                                        source: 'sbmobyBackspace();');
+                              },
+                              child: const Icon(
+                                Icons.backspace,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
+                ),
+              ],
+            ))
     ];
 
     return Column(

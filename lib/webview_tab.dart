@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_browser/main.dart';
 import 'package:flutter_browser/models/webview_model.dart';
 import 'package:flutter_browser/util.dart';
@@ -160,6 +161,7 @@ class _WebViewTabState extends State<WebViewTab> with WidgetsBindingObserver {
     initialSettings.isFraudulentWebsiteWarningEnabled = true;
     initialSettings.disableLongPressContextMenuOnLinks = true;
     initialSettings.allowingReadAccessTo = WebUri('file://$WEB_ARCHIVE_DIR/');
+    initialSettings.javaScriptEnabled = true;
 
     return InAppWebView(
       keepAlive: widget.webViewModel.keepAlive,
@@ -181,6 +183,13 @@ class _WebViewTabState extends State<WebViewTab> with WidgetsBindingObserver {
         if (Util.isAndroid()) {
           controller.startSafeBrowsing();
         }
+
+        controller.addJavaScriptHandler(
+            handlerName: 'handlerCopy',
+            callback: (args) async {
+              var text = args[0];
+              await Clipboard.setData(ClipboardData(text: text));
+            });
 
         widget.webViewModel.settings = await controller.getSettings();
 
@@ -507,7 +516,7 @@ function sbmobyCut() {
     const options = {
       bubbles: true,
       cancelable: true,
-      keyCode: 8,
+      keyCode: 8, // Backspace
     };
     document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
     document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
@@ -588,8 +597,6 @@ function sbmobyBackspace() {
   document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
   document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
 }
-
-
 """, injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START),
         ],
       ),
