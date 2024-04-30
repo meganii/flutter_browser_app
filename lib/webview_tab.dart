@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_browser/main.dart';
@@ -43,9 +45,7 @@ class _WebViewTabState extends State<WebViewTab> with WidgetsBindingObserver {
     _pullToRefreshController = kIsWeb
         ? null
         : PullToRefreshController(
-            settings: PullToRefreshSettings(
-              color: Colors.blue
-            ),
+            settings: PullToRefreshSettings(color: Colors.blue),
             onRefresh: () async {
               if (defaultTargetPlatform == TargetPlatform.android) {
                 _webViewController?.reload();
@@ -175,7 +175,8 @@ class _WebViewTabState extends State<WebViewTab> with WidgetsBindingObserver {
         _webViewController = controller;
         widget.webViewModel.webViewController = controller;
         widget.webViewModel.pullToRefreshController = _pullToRefreshController;
-        widget.webViewModel.findInteractionController = _findInteractionController;
+        widget.webViewModel.findInteractionController =
+            _findInteractionController;
 
         if (Util.isAndroid()) {
           controller.startSafeBrowsing();
@@ -332,6 +333,15 @@ class _WebViewTabState extends State<WebViewTab> with WidgetsBindingObserver {
       shouldOverrideUrlLoading: (controller, navigationAction) async {
         var url = navigationAction.request.url;
 
+        if (url != null && !url.toString().startsWith('https://scrapbox.io')) {
+          if (await canLaunchUrl(url)) {
+            // Launch the App
+            await launchUrl(url);
+            // and cancel the request
+            return NavigationActionPolicy.CANCEL;
+          }
+        }
+
         if (url != null &&
             !["http", "https", "file", "chrome", "data", "javascript", "about"]
                 .contains(url.scheme)) {
@@ -470,6 +480,117 @@ class _WebViewTabState extends State<WebViewTab> with WidgetsBindingObserver {
             action: action,
             permanentPersistence: true);
       },
+      onScrollChanged: (controller, x, y) async {
+        if (Util.isAndroid()) {
+          if (widget.webViewModel.scrollHeight < y) {
+            browserModel.showBottomAppBar = false;
+          } else {
+            // 上スクロール
+            browserModel.showBottomAppBar = true;
+          }
+          widget.webViewModel.scrollHeight = y;
+        } else if (Util.isIOS()) {}
+      },
+      initialUserScripts: UnmodifiableListView<UserScript>(
+        [
+          UserScript(source: """
+function sbmobyCopy() {
+    const textInput = document.getElementById("text-input");
+    window.flutter_inappwebview.callHandler('handlerCopy', textInput.value);
+}
+
+function sbmobyCut() {
+    const textInput = document.getElementById("text-input");
+    window.flutter_inappwebview.callHandler('handlerCopy', textInput.value);
+    const options = {
+      bubbles: true,
+      cancelable: true,
+      keyCode: 8,
+    };
+    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
+    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
+}
+
+function sbmobyIndent() {
+    const options = {
+      bubbles: true,
+      cancelable: true,
+      keyCode: 39,  // ArrowRight
+      ctrlKey: true,
+    };
+    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
+    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
+}
+
+function sbmobyOutdent() {
+    const options = {
+      bubbles: true,
+      cancelable: true,
+      keyCode: 37,  // ArrowLeft
+      ctrlKey: true,
+    };
+    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
+    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
+}
+
+function sbmobyUpLines() {
+    const options = {
+      bubbles: true,
+      cancelable: true,
+      keyCode: 38,
+      ctrlKey: true,
+    };
+    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
+    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
+}
+
+function sbmobyDownLines() {
+    const options = {
+      bubbles: true,
+      cancelable: true,
+      keyCode: 40,
+      ctrlKey: true,
+    };
+    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
+    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
+}
+
+function sbmobyAddIcon() {
+  const options = {
+    bubbles: true,
+    cancelable: true,
+    keyCode: 73,
+    ctrlKey: true,
+  };
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
+}
+
+function sbmobyUndo() {
+  const options = {
+    bubbles: true,
+    cancelable: true,
+    keyCode: 90,
+    ctrlKey: true,
+  };
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
+}
+
+function sbmobyBackspace() {
+  const options = {
+    bubbles: true,
+    cancelable: true,
+    keyCode: 8,
+  };
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
+}
+
+
+""", injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START),
+        ],
+      ),
     );
   }
 

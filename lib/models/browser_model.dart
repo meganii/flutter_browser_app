@@ -1,21 +1,19 @@
-import 'dart:convert';
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_browser/models/web_archive_model.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:flutter_browser/models/favorite_model.dart';
+import 'package:flutter_browser/models/web_archive_model.dart';
 import 'package:flutter_browser/models/webview_model.dart';
 import 'package:flutter_browser/webview_tab.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'search_engine_model.dart';
-import 'package:collection/collection.dart';
 
 class BrowserSettings {
   SearchEngineModel searchEngine;
@@ -81,6 +79,17 @@ class BrowserModel extends ChangeNotifier {
   set showTabScroller(bool value) {
     if (value != _showTabScroller) {
       _showTabScroller = value;
+      notifyListeners();
+    }
+  }
+
+  bool _showBottomAppBar = true;
+
+  bool get showBottomAppBar => _showBottomAppBar;
+
+  set showBottomAppBar(bool value) {
+    if (value != _showBottomAppBar) {
+      _showBottomAppBar = value;
       notifyListeners();
     }
   }
@@ -154,7 +163,8 @@ class BrowserModel extends ChangeNotifier {
 
   void closeAllTabs() {
     for (final webViewTab in _webViewTabs) {
-      InAppWebViewController.disposeKeepAlive(webViewTab.webViewModel.keepAlive);
+      InAppWebViewController.disposeKeepAlive(
+          webViewTab.webViewModel.keepAlive);
     }
     _webViewTabs.clear();
     _currentTabIndex = -1;

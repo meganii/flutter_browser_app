@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -25,10 +24,11 @@ class WebViewModel extends ChangeNotifier {
   Uint8List? screenshot;
   bool needsToCompleteInitialLoad;
   final keepAlive = InAppWebViewKeepAlive();
+  late int _scrollHeight;
 
   WebViewModel(
       {int? tabIndex,
-        WebUri? url,
+      WebUri? url,
       String? title,
       Favicon? favicon,
       double progress = 0.0,
@@ -42,8 +42,8 @@ class WebViewModel extends ChangeNotifier {
       this.windowId,
       this.settings,
       this.webViewController,
-        this.pullToRefreshController,
-        this.findInteractionController,
+      this.pullToRefreshController,
+      this.findInteractionController,
       this.needsToCompleteInitialLoad = true}) {
     _tabIndex = tabIndex;
     _url = url;
@@ -57,6 +57,7 @@ class WebViewModel extends ChangeNotifier {
     _loadedResources = loadedResources ?? <LoadedResource>[];
     _isSecure = isSecure;
     settings = settings ?? InAppWebViewSettings();
+    _scrollHeight = 0;
   }
 
   int? get tabIndex => _tabIndex;
@@ -254,5 +255,12 @@ class WebViewModel extends ChangeNotifier {
   @override
   String toString() {
     return toMap().toString();
+  }
+
+  int get scrollHeight => _scrollHeight;
+
+  set scrollHeight(int value) {
+    _scrollHeight = value;
+    notifyListeners();
   }
 }

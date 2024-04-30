@@ -99,22 +99,7 @@ class _WebViewTabAppBarState extends State<WebViewTabAppBar>
           return Selector<WebViewModel, bool>(
               selector: (context, webViewModel) => webViewModel.isIncognitoMode,
               builder: (context, isIncognitoMode, child) {
-                return leading != null
-                    ? AppBar(
-                        backgroundColor:
-                            isIncognitoMode ? Colors.black87 : Colors.blue,
-                        leading: _buildAppBarHomePageWidget(),
-                        titleSpacing: 0.0,
-                        title: _buildSearchTextField(),
-                        actions: _buildActionsMenu(),
-                      )
-                    : AppBar(
-                        backgroundColor:
-                            isIncognitoMode ? Colors.black87 : Colors.blue,
-                        titleSpacing: 10.0,
-                        title: _buildSearchTextField(),
-                        actions: _buildActionsMenu(),
-                      );
+                return _buildActionsMenu();
               });
         });
   }
@@ -221,486 +206,565 @@ class _WebViewTabAppBarState extends State<WebViewTabAppBar>
     );
   }
 
-  List<Widget> _buildActionsMenu() {
+  Widget _buildActionsMenu() {
     var browserModel = Provider.of<BrowserModel>(context, listen: true);
     var settings = browserModel.getSettings();
 
-    return <Widget>[
-      settings.homePageEnabled
-          ? const SizedBox(
-              width: 10.0,
-            )
-          : Container(),
-      InkWell(
-        key: tabInkWellKey,
-        onLongPress: () {
-          final RenderBox? box =
-              tabInkWellKey.currentContext!.findRenderObject() as RenderBox?;
-          if (box == null) {
-            return;
-          }
+    return browserModel.showBottomAppBar
+        ? SizedBox(
+            height: 50,
+            child: BottomAppBar(
+              color: Colors.grey,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    padding: const EdgeInsets.all(0.0),
+                    icon: const Icon(Icons.home),
+                    onPressed: () {
+                      // ホームボタンがタップされた時の処理
+                    },
+                  ),
+                  Row(
+                    children: [
+                      settings.homePageEnabled
+                          ? const SizedBox(
+                              width: 10.0,
+                            )
+                          : Container(),
+                      InkWell(
+                        key: tabInkWellKey,
+                        onLongPress: () {
+                          final RenderBox? box = tabInkWellKey.currentContext!
+                              .findRenderObject() as RenderBox?;
+                          if (box == null) {
+                            return;
+                          }
 
-          Offset position = box.localToGlobal(Offset.zero);
+                          Offset position = box.localToGlobal(Offset.zero);
 
-          showMenu(
-                  context: context,
-                  position: RelativeRect.fromLTRB(position.dx,
-                      position.dy + box.size.height, box.size.width, 0),
-                  items: TabPopupMenuActions.choices.map((tabPopupMenuAction) {
-                    IconData? iconData;
-                    switch (tabPopupMenuAction) {
-                      case TabPopupMenuActions.CLOSE_TABS:
-                        iconData = Icons.cancel;
-                        break;
-                      case TabPopupMenuActions.NEW_TAB:
-                        iconData = Icons.add;
-                        break;
-                      case TabPopupMenuActions.NEW_INCOGNITO_TAB:
-                        iconData = MaterialCommunityIcons.incognito;
-                        break;
-                    }
+                          showMenu(
+                                  context: context,
+                                  position: RelativeRect.fromLTRB(
+                                      position.dx,
+                                      position.dy + box.size.height,
+                                      box.size.width,
+                                      0),
+                                  items: TabPopupMenuActions.choices
+                                      .map((tabPopupMenuAction) {
+                                    IconData? iconData;
+                                    switch (tabPopupMenuAction) {
+                                      case TabPopupMenuActions.CLOSE_TABS:
+                                        iconData = Icons.cancel;
+                                        break;
+                                      case TabPopupMenuActions.NEW_TAB:
+                                        iconData = Icons.add;
+                                        break;
+                                      case TabPopupMenuActions
+                                            .NEW_INCOGNITO_TAB:
+                                        iconData =
+                                            MaterialCommunityIcons.incognito;
+                                        break;
+                                    }
 
-                    return PopupMenuItem<String>(
-                      value: tabPopupMenuAction,
-                      child: Row(children: [
-                        Icon(
-                          iconData,
-                          color: Colors.black,
-                        ),
-                        Container(
-                          padding: const EdgeInsets.only(left: 10.0),
-                          child: Text(tabPopupMenuAction),
-                        )
-                      ]),
-                    );
-                  }).toList())
-              .then((value) {
-            switch (value) {
-              case TabPopupMenuActions.CLOSE_TABS:
-                browserModel.closeAllTabs();
-                break;
-              case TabPopupMenuActions.NEW_TAB:
-                addNewTab();
-                break;
-              case TabPopupMenuActions.NEW_INCOGNITO_TAB:
-                addNewIncognitoTab();
-                break;
-            }
-          });
-        },
-        onTap: () async {
-          if (browserModel.webViewTabs.isNotEmpty) {
-            var webViewModel = browserModel.getCurrentTab()?.webViewModel;
-            var webViewController = webViewModel?.webViewController;
+                                    return PopupMenuItem<String>(
+                                      value: tabPopupMenuAction,
+                                      child: Row(children: [
+                                        Icon(
+                                          iconData,
+                                          color: Colors.black,
+                                        ),
+                                        Container(
+                                          padding:
+                                              const EdgeInsets.only(left: 10.0),
+                                          child: Text(tabPopupMenuAction),
+                                        )
+                                      ]),
+                                    );
+                                  }).toList())
+                              .then((value) {
+                            switch (value) {
+                              case TabPopupMenuActions.CLOSE_TABS:
+                                browserModel.closeAllTabs();
+                                break;
+                              case TabPopupMenuActions.NEW_TAB:
+                                addNewTab();
+                                break;
+                              case TabPopupMenuActions.NEW_INCOGNITO_TAB:
+                                addNewIncognitoTab();
+                                break;
+                            }
+                          });
+                        },
+                        onTap: () async {
+                          if (browserModel.webViewTabs.isNotEmpty) {
+                            var webViewModel =
+                                browserModel.getCurrentTab()?.webViewModel;
+                            var webViewController =
+                                webViewModel?.webViewController;
 
-            if (View.of(context).viewInsets.bottom > 0.0) {
-              SystemChannels.textInput.invokeMethod('TextInput.hide');
-              if (FocusManager.instance.primaryFocus != null) {
-                FocusManager.instance.primaryFocus!.unfocus();
-              }
-              if (webViewController != null) {
-                await webViewController.evaluateJavascript(
-                    source: "document.activeElement.blur();");
-              }
-              await Future.delayed(const Duration(milliseconds: 300));
-            }
-
-            if (webViewModel != null && webViewController != null) {
-              webViewModel.screenshot = await webViewController
-                  .takeScreenshot(
-                      screenshotConfiguration: ScreenshotConfiguration(
-                          compressFormat: CompressFormat.JPEG, quality: 20))
-                  .timeout(
-                    const Duration(milliseconds: 1500),
-                    onTimeout: () => null,
-                  );
-            }
-
-            browserModel.showTabScroller = true;
-          }
-        },
-        child: Container(
-          margin: const EdgeInsets.only(
-              left: 10.0, top: 15.0, right: 10.0, bottom: 15.0),
-          decoration: BoxDecoration(
-              border: Border.all(width: 2.0, color: Colors.white),
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.circular(5.0)),
-          constraints: const BoxConstraints(minWidth: 25.0),
-          child: Center(
-              child: Text(
-            browserModel.webViewTabs.length.toString(),
-            style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 14.0),
-          )),
-        ),
-      ),
-      PopupMenuButton<String>(
-        onSelected: _popupMenuChoiceAction,
-        itemBuilder: (popupMenuContext) {
-          var items = [
-            CustomPopupMenuItem<String>(
-              enabled: true,
-              isIconButtonRow: true,
-              child: StatefulBuilder(
-                builder: (statefulContext, setState) {
-                  var browserModel =
-                      Provider.of<BrowserModel>(statefulContext, listen: true);
-                  var webViewModel =
-                      Provider.of<WebViewModel>(statefulContext, listen: true);
-                  var webViewController = webViewModel.webViewController;
-
-                  var isFavorite = false;
-                  FavoriteModel? favorite;
-
-                  if (webViewModel.url != null &&
-                      webViewModel.url!.toString().isNotEmpty) {
-                    favorite = FavoriteModel(
-                        url: webViewModel.url,
-                        title: webViewModel.title ?? "",
-                        favicon: webViewModel.favicon);
-                    isFavorite = browserModel.containsFavorite(favorite);
-                  }
-
-                  var children = <Widget>[];
-
-                  if (Util.isIOS()) {
-                    children.add(
-                      SizedBox(
-                          width: 35.0,
-                          child: IconButton(
-                              padding: const EdgeInsets.all(0.0),
-                              icon: const Icon(
-                                Icons.arrow_back,
-                                color: Colors.black,
-                              ),
-                              onPressed: () {
-                                webViewController?.goBack();
-                                Navigator.pop(popupMenuContext);
-                              })),
-                    );
-                  }
-
-                  children.addAll([
-                    SizedBox(
-                        width: 35.0,
-                        child: IconButton(
-                            padding: const EdgeInsets.all(0.0),
-                            icon: const Icon(
-                              Icons.arrow_forward,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {
-                              webViewController?.goForward();
-                              Navigator.pop(popupMenuContext);
-                            })),
-                    SizedBox(
-                        width: 35.0,
-                        child: IconButton(
-                            padding: const EdgeInsets.all(0.0),
-                            icon: Icon(
-                              isFavorite ? Icons.star : Icons.star_border,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                if (favorite != null) {
-                                  if (!browserModel
-                                      .containsFavorite(favorite)) {
-                                    browserModel.addFavorite(favorite);
-                                  } else if (browserModel
-                                      .containsFavorite(favorite)) {
-                                    browserModel.removeFavorite(favorite);
-                                  }
-                                }
-                              });
-                            })),
-                    SizedBox(
-                        width: 35.0,
-                        child: IconButton(
-                            padding: const EdgeInsets.all(0.0),
-                            icon: const Icon(
-                              Icons.file_download,
-                              color: Colors.black,
-                            ),
-                            onPressed: () async {
-                              Navigator.pop(popupMenuContext);
-                              if (webViewModel.url != null &&
-                                  webViewModel.url!.scheme.startsWith("http")) {
-                                var url = webViewModel.url;
-                                if (url == null) {
-                                  return;
-                                }
-
-                                String webArchivePath =
-                                    "$WEB_ARCHIVE_DIR${Platform.pathSeparator}${url.scheme}-${url.host}${url.path.replaceAll("/", "-")}${DateTime.now().microsecondsSinceEpoch}.${Util.isAndroid() ? WebArchiveFormat.MHT.toValue() : WebArchiveFormat.WEBARCHIVE.toValue()}";
-
-                                String? savedPath =
-                                    (await webViewController?.saveWebArchive(
-                                        filePath: webArchivePath,
-                                        autoname: false));
-
-                                var webArchiveModel = WebArchiveModel(
-                                    url: url,
-                                    path: savedPath,
-                                    title: webViewModel.title,
-                                    favicon: webViewModel.favicon,
-                                    timestamp: DateTime.now());
-
-                                if (savedPath != null) {
-                                  browserModel.addWebArchive(
-                                      url.toString(), webArchiveModel);
-                                  if (mounted) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                      content: Text(
-                                          "${webViewModel.url} saved offline!"),
-                                    ));
-                                  }
-                                  browserModel.save();
-                                } else {
-                                  if (mounted) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(const SnackBar(
-                                      content: Text("Unable to save!"),
-                                    ));
-                                  }
-                                }
+                            if (View.of(context).viewInsets.bottom > 0.0) {
+                              SystemChannels.textInput
+                                  .invokeMethod('TextInput.hide');
+                              if (FocusManager.instance.primaryFocus != null) {
+                                FocusManager.instance.primaryFocus!.unfocus();
                               }
-                            })),
-                    SizedBox(
-                        width: 35.0,
-                        child: IconButton(
-                            padding: const EdgeInsets.all(0.0),
-                            icon: const Icon(
-                              Icons.info_outline,
-                              color: Colors.black,
-                            ),
-                            onPressed: () async {
-                              Navigator.pop(popupMenuContext);
+                              if (webViewController != null) {
+                                await webViewController.evaluateJavascript(
+                                    source: "document.activeElement.blur();");
+                              }
+                              await Future.delayed(
+                                  const Duration(milliseconds: 300));
+                            }
 
-                              await route?.completed;
-                              showUrlInfo();
-                            })),
-                    SizedBox(
-                        width: 35.0,
-                        child: IconButton(
-                            padding: const EdgeInsets.all(0.0),
-                            icon: const Icon(
-                              MaterialCommunityIcons.cellphone_screenshot,
-                              color: Colors.black,
-                            ),
-                            onPressed: () async {
-                              Navigator.pop(popupMenuContext);
+                            if (webViewModel != null &&
+                                webViewController != null) {
+                              webViewModel.screenshot = await webViewController
+                                  .takeScreenshot(
+                                      screenshotConfiguration:
+                                          ScreenshotConfiguration(
+                                              compressFormat:
+                                                  CompressFormat.JPEG,
+                                              quality: 20))
+                                  .timeout(
+                                    const Duration(milliseconds: 1500),
+                                    onTimeout: () => null,
+                                  );
+                            }
 
-                              await route?.completed;
+                            browserModel.showTabScroller = true;
+                          }
+                        },
+                        child: Container(
+                          // margin: const EdgeInsets.only(
+                          //     left: 1.0, top: 1.0, right: 1.0, bottom: 1.0),
+                          padding: const EdgeInsets.all(0.0),
+                          margin: const EdgeInsets.all(0.0),
+                          decoration: BoxDecoration(
+                              border:
+                                  Border.all(width: 2.0, color: Colors.white),
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.circular(5.0)),
+                          constraints: const BoxConstraints(minWidth: 30.0),
+                          child: Center(
+                              child: Text(
+                            browserModel.webViewTabs.length.toString(),
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12.0),
+                          )),
+                        ),
+                      ),
+                      PopupMenuButton<String>(
+                        padding: const EdgeInsets.all(0.0),
+                        onSelected: _popupMenuChoiceAction,
+                        itemBuilder: (popupMenuContext) {
+                          var items = [
+                            CustomPopupMenuItem<String>(
+                              enabled: true,
+                              isIconButtonRow: true,
+                              child: StatefulBuilder(
+                                builder: (statefulContext, setState) {
+                                  var browserModel = Provider.of<BrowserModel>(
+                                      statefulContext,
+                                      listen: true);
+                                  var webViewModel = Provider.of<WebViewModel>(
+                                      statefulContext,
+                                      listen: true);
+                                  var webViewController =
+                                      webViewModel.webViewController;
 
-                              takeScreenshotAndShow();
-                            })),
-                    SizedBox(
-                        width: 35.0,
-                        child: IconButton(
-                            padding: const EdgeInsets.all(0.0),
-                            icon: const Icon(
-                              Icons.refresh,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {
-                              webViewController?.reload();
-                              Navigator.pop(popupMenuContext);
-                            })),
-                  ]);
+                                  var isFavorite = false;
+                                  FavoriteModel? favorite;
 
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.max,
-                    children: children,
-                  );
-                },
+                                  if (webViewModel.url != null &&
+                                      webViewModel.url!.toString().isNotEmpty) {
+                                    favorite = FavoriteModel(
+                                        url: webViewModel.url,
+                                        title: webViewModel.title ?? "",
+                                        favicon: webViewModel.favicon);
+                                    isFavorite =
+                                        browserModel.containsFavorite(favorite);
+                                  }
+
+                                  var children = <Widget>[];
+
+                                  if (Util.isIOS()) {
+                                    children.add(
+                                      SizedBox(
+                                          width: 35.0,
+                                          child: IconButton(
+                                              padding:
+                                                  const EdgeInsets.all(0.0),
+                                              icon: const Icon(
+                                                Icons.arrow_back,
+                                                color: Colors.black,
+                                              ),
+                                              onPressed: () {
+                                                webViewController?.goBack();
+                                                Navigator.pop(popupMenuContext);
+                                              })),
+                                    );
+                                  }
+
+                                  children.addAll([
+                                    SizedBox(
+                                        width: 35.0,
+                                        child: IconButton(
+                                            padding: const EdgeInsets.all(0.0),
+                                            icon: const Icon(
+                                              Icons.arrow_forward,
+                                              color: Colors.black,
+                                            ),
+                                            onPressed: () {
+                                              webViewController?.goForward();
+                                              Navigator.pop(popupMenuContext);
+                                            })),
+                                    SizedBox(
+                                        width: 35.0,
+                                        child: IconButton(
+                                            padding: const EdgeInsets.all(0.0),
+                                            icon: Icon(
+                                              isFavorite
+                                                  ? Icons.star
+                                                  : Icons.star_border,
+                                              color: Colors.black,
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                if (favorite != null) {
+                                                  if (!browserModel
+                                                      .containsFavorite(
+                                                          favorite)) {
+                                                    browserModel
+                                                        .addFavorite(favorite);
+                                                  } else if (browserModel
+                                                      .containsFavorite(
+                                                          favorite)) {
+                                                    browserModel.removeFavorite(
+                                                        favorite);
+                                                  }
+                                                }
+                                              });
+                                            })),
+                                    SizedBox(
+                                        width: 35.0,
+                                        child: IconButton(
+                                            padding: const EdgeInsets.all(0.0),
+                                            icon: const Icon(
+                                              Icons.file_download,
+                                              color: Colors.black,
+                                            ),
+                                            onPressed: () async {
+                                              Navigator.pop(popupMenuContext);
+                                              if (webViewModel.url != null &&
+                                                  webViewModel.url!.scheme
+                                                      .startsWith("http")) {
+                                                var url = webViewModel.url;
+                                                if (url == null) {
+                                                  return;
+                                                }
+
+                                                String webArchivePath =
+                                                    "$WEB_ARCHIVE_DIR${Platform.pathSeparator}${url.scheme}-${url.host}${url.path.replaceAll("/", "-")}${DateTime.now().microsecondsSinceEpoch}.${Util.isAndroid() ? WebArchiveFormat.MHT.toValue() : WebArchiveFormat.WEBARCHIVE.toValue()}";
+
+                                                String? savedPath =
+                                                    (await webViewController
+                                                        ?.saveWebArchive(
+                                                            filePath:
+                                                                webArchivePath,
+                                                            autoname: false));
+
+                                                var webArchiveModel =
+                                                    WebArchiveModel(
+                                                        url: url,
+                                                        path: savedPath,
+                                                        title:
+                                                            webViewModel.title,
+                                                        favicon: webViewModel
+                                                            .favicon,
+                                                        timestamp:
+                                                            DateTime.now());
+
+                                                if (savedPath != null) {
+                                                  browserModel.addWebArchive(
+                                                      url.toString(),
+                                                      webArchiveModel);
+                                                  if (mounted) {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          "${webViewModel.url} saved offline!"),
+                                                    ));
+                                                  }
+                                                  browserModel.save();
+                                                } else {
+                                                  if (mounted) {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                            const SnackBar(
+                                                      content: Text(
+                                                          "Unable to save!"),
+                                                    ));
+                                                  }
+                                                }
+                                              }
+                                            })),
+                                    SizedBox(
+                                        width: 35.0,
+                                        child: IconButton(
+                                            padding: const EdgeInsets.all(0.0),
+                                            icon: const Icon(
+                                              Icons.info_outline,
+                                              color: Colors.black,
+                                            ),
+                                            onPressed: () async {
+                                              Navigator.pop(popupMenuContext);
+
+                                              await route?.completed;
+                                              showUrlInfo();
+                                            })),
+                                    SizedBox(
+                                        width: 35.0,
+                                        child: IconButton(
+                                            padding: const EdgeInsets.all(0.0),
+                                            icon: const Icon(
+                                              MaterialCommunityIcons
+                                                  .cellphone_screenshot,
+                                              color: Colors.black,
+                                            ),
+                                            onPressed: () async {
+                                              Navigator.pop(popupMenuContext);
+
+                                              await route?.completed;
+
+                                              takeScreenshotAndShow();
+                                            })),
+                                    SizedBox(
+                                        width: 35.0,
+                                        child: IconButton(
+                                            padding: const EdgeInsets.all(0.0),
+                                            icon: const Icon(
+                                              Icons.refresh,
+                                              color: Colors.black,
+                                            ),
+                                            onPressed: () {
+                                              webViewController?.reload();
+                                              Navigator.pop(popupMenuContext);
+                                            })),
+                                  ]);
+
+                                  return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: children,
+                                  );
+                                },
+                              ),
+                            )
+                          ];
+
+                          items.addAll(PopupMenuActions.choices.map((choice) {
+                            switch (choice) {
+                              case PopupMenuActions.NEW_TAB:
+                                return CustomPopupMenuItem<String>(
+                                  enabled: true,
+                                  value: choice,
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(choice),
+                                        const Icon(
+                                          Icons.add,
+                                          color: Colors.black,
+                                        )
+                                      ]),
+                                );
+                              case PopupMenuActions.NEW_INCOGNITO_TAB:
+                                return CustomPopupMenuItem<String>(
+                                  enabled: true,
+                                  value: choice,
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(choice),
+                                        const Icon(
+                                          MaterialCommunityIcons.incognito,
+                                          color: Colors.black,
+                                        )
+                                      ]),
+                                );
+                              case PopupMenuActions.FAVORITES:
+                                return CustomPopupMenuItem<String>(
+                                  enabled: true,
+                                  value: choice,
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(choice),
+                                        const Icon(
+                                          Icons.star,
+                                          color: Colors.yellow,
+                                        )
+                                      ]),
+                                );
+                              case PopupMenuActions.WEB_ARCHIVES:
+                                return CustomPopupMenuItem<String>(
+                                  enabled: true,
+                                  value: choice,
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(choice),
+                                        const Icon(
+                                          Icons.offline_pin,
+                                          color: Colors.blue,
+                                        )
+                                      ]),
+                                );
+                              case PopupMenuActions.DESKTOP_MODE:
+                                return CustomPopupMenuItem<String>(
+                                  enabled: browserModel.getCurrentTab() != null,
+                                  value: choice,
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(choice),
+                                        Selector<WebViewModel, bool>(
+                                          selector: (context, webViewModel) =>
+                                              webViewModel.isDesktopMode,
+                                          builder: (context, value, child) {
+                                            return Icon(
+                                              value
+                                                  ? Icons.check_box
+                                                  : Icons
+                                                      .check_box_outline_blank,
+                                              color: Colors.black,
+                                            );
+                                          },
+                                        )
+                                      ]),
+                                );
+                              case PopupMenuActions.HISTORY:
+                                return CustomPopupMenuItem<String>(
+                                  enabled: browserModel.getCurrentTab() != null,
+                                  value: choice,
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(choice),
+                                        const Icon(
+                                          Icons.history,
+                                          color: Colors.black,
+                                        )
+                                      ]),
+                                );
+                              case PopupMenuActions.SHARE:
+                                return CustomPopupMenuItem<String>(
+                                  enabled: browserModel.getCurrentTab() != null,
+                                  value: choice,
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(choice),
+                                        const Icon(
+                                          Ionicons.logo_whatsapp,
+                                          color: Colors.green,
+                                        )
+                                      ]),
+                                );
+                              case PopupMenuActions.SETTINGS:
+                                return CustomPopupMenuItem<String>(
+                                  enabled: true,
+                                  value: choice,
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(choice),
+                                        const Icon(
+                                          Icons.settings,
+                                          color: Colors.grey,
+                                        )
+                                      ]),
+                                );
+                              case PopupMenuActions.DEVELOPERS:
+                                return CustomPopupMenuItem<String>(
+                                  enabled: browserModel.getCurrentTab() != null,
+                                  value: choice,
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(choice),
+                                        const Icon(
+                                          Icons.developer_mode,
+                                          color: Colors.black,
+                                        )
+                                      ]),
+                                );
+                              case PopupMenuActions.FIND_ON_PAGE:
+                                return CustomPopupMenuItem<String>(
+                                  enabled: browserModel.getCurrentTab() != null,
+                                  value: choice,
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(choice),
+                                        const Icon(
+                                          Icons.search,
+                                          color: Colors.black,
+                                        )
+                                      ]),
+                                );
+                              case PopupMenuActions.INAPPWEBVIEW_PROJECT:
+                                return CustomPopupMenuItem<String>(
+                                  enabled: true,
+                                  value: choice,
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(choice),
+                                        Container(
+                                          padding:
+                                              const EdgeInsets.only(right: 6),
+                                          child:
+                                              const AnimatedFlutterBrowserLogo(
+                                            size: 12.5,
+                                          ),
+                                        )
+                                      ]),
+                                );
+                              default:
+                                return CustomPopupMenuItem<String>(
+                                  value: choice,
+                                  child: Text(choice),
+                                );
+                            }
+                          }).toList());
+
+                          return items;
+                        },
+                      )
+                    ],
+                  )
+                ],
               ),
-            )
-          ];
-
-          items.addAll(PopupMenuActions.choices.map((choice) {
-            switch (choice) {
-              case PopupMenuActions.NEW_TAB:
-                return CustomPopupMenuItem<String>(
-                  enabled: true,
-                  value: choice,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(choice),
-                        const Icon(
-                          Icons.add,
-                          color: Colors.black,
-                        )
-                      ]),
-                );
-              case PopupMenuActions.NEW_INCOGNITO_TAB:
-                return CustomPopupMenuItem<String>(
-                  enabled: true,
-                  value: choice,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(choice),
-                        const Icon(
-                          MaterialCommunityIcons.incognito,
-                          color: Colors.black,
-                        )
-                      ]),
-                );
-              case PopupMenuActions.FAVORITES:
-                return CustomPopupMenuItem<String>(
-                  enabled: true,
-                  value: choice,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(choice),
-                        const Icon(
-                          Icons.star,
-                          color: Colors.yellow,
-                        )
-                      ]),
-                );
-              case PopupMenuActions.WEB_ARCHIVES:
-                return CustomPopupMenuItem<String>(
-                  enabled: true,
-                  value: choice,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(choice),
-                        const Icon(
-                          Icons.offline_pin,
-                          color: Colors.blue,
-                        )
-                      ]),
-                );
-              case PopupMenuActions.DESKTOP_MODE:
-                return CustomPopupMenuItem<String>(
-                  enabled: browserModel.getCurrentTab() != null,
-                  value: choice,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(choice),
-                        Selector<WebViewModel, bool>(
-                          selector: (context, webViewModel) =>
-                              webViewModel.isDesktopMode,
-                          builder: (context, value, child) {
-                            return Icon(
-                              value
-                                  ? Icons.check_box
-                                  : Icons.check_box_outline_blank,
-                              color: Colors.black,
-                            );
-                          },
-                        )
-                      ]),
-                );
-              case PopupMenuActions.HISTORY:
-                return CustomPopupMenuItem<String>(
-                  enabled: browserModel.getCurrentTab() != null,
-                  value: choice,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(choice),
-                        const Icon(
-                          Icons.history,
-                          color: Colors.black,
-                        )
-                      ]),
-                );
-              case PopupMenuActions.SHARE:
-                return CustomPopupMenuItem<String>(
-                  enabled: browserModel.getCurrentTab() != null,
-                  value: choice,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(choice),
-                        const Icon(
-                          Ionicons.logo_whatsapp,
-                          color: Colors.green,
-                        )
-                      ]),
-                );
-              case PopupMenuActions.SETTINGS:
-                return CustomPopupMenuItem<String>(
-                  enabled: true,
-                  value: choice,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(choice),
-                        const Icon(
-                          Icons.settings,
-                          color: Colors.grey,
-                        )
-                      ]),
-                );
-              case PopupMenuActions.DEVELOPERS:
-                return CustomPopupMenuItem<String>(
-                  enabled: browserModel.getCurrentTab() != null,
-                  value: choice,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(choice),
-                        const Icon(
-                          Icons.developer_mode,
-                          color: Colors.black,
-                        )
-                      ]),
-                );
-              case PopupMenuActions.FIND_ON_PAGE:
-                return CustomPopupMenuItem<String>(
-                  enabled: browserModel.getCurrentTab() != null,
-                  value: choice,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(choice),
-                        const Icon(
-                          Icons.search,
-                          color: Colors.black,
-                        )
-                      ]),
-                );
-              case PopupMenuActions.INAPPWEBVIEW_PROJECT:
-                return CustomPopupMenuItem<String>(
-                  enabled: true,
-                  value: choice,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(choice),
-                        Container(
-                          padding: const EdgeInsets.only(right: 6),
-                          child: const AnimatedFlutterBrowserLogo(
-                            size: 12.5,
-                          ),
-                        )
-                      ]),
-                );
-              default:
-                return CustomPopupMenuItem<String>(
-                  value: choice,
-                  child: Text(choice),
-                );
-            }
-          }).toList());
-
-          return items;
-        },
-      )
-    ];
+            ))
+        : const SizedBox.shrink();
   }
 
   void _popupMenuChoiceAction(String choice) async {
@@ -723,9 +787,13 @@ class _WebViewTabAppBarState extends State<WebViewTabAppBar>
         showWebArchives();
         break;
       case PopupMenuActions.FIND_ON_PAGE:
-        var isFindInteractionEnabled = currentWebViewModel.settings?.isFindInteractionEnabled ?? false;
-        var findInteractionController = currentWebViewModel.findInteractionController;
-        if (Util.isIOS() && isFindInteractionEnabled && findInteractionController != null) {
+        var isFindInteractionEnabled =
+            currentWebViewModel.settings?.isFindInteractionEnabled ?? false;
+        var findInteractionController =
+            currentWebViewModel.findInteractionController;
+        if (Util.isIOS() &&
+            isFindInteractionEnabled &&
+            findInteractionController != null) {
           await findInteractionController.presentFindNavigator();
         } else if (widget.showFindOnPage != null) {
           widget.showFindOnPage!();
@@ -1006,9 +1074,10 @@ class _WebViewTabAppBarState extends State<WebViewTabAppBar>
 
       var currentSettings = await webViewController.getSettings();
       if (currentSettings != null) {
-        currentSettings.preferredContentMode = webViewModel?.isDesktopMode ?? false
-            ? UserPreferredContentMode.DESKTOP
-            : UserPreferredContentMode.RECOMMENDED;
+        currentSettings.preferredContentMode =
+            webViewModel?.isDesktopMode ?? false
+                ? UserPreferredContentMode.DESKTOP
+                : UserPreferredContentMode.RECOMMENDED;
         await webViewController.setSettings(settings: currentSettings);
       }
       await webViewController.reload();
