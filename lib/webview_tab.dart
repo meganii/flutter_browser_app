@@ -333,14 +333,16 @@ class _WebViewTabState extends State<WebViewTab> with WidgetsBindingObserver {
       shouldOverrideUrlLoading: (controller, navigationAction) async {
         var url = navigationAction.request.url;
 
-        if (url != null && !url.toString().startsWith('https://scrapbox.io')) {
-          if (await canLaunchUrl(url)) {
-            // Launch the App
-            await launchUrl(url);
-            // and cancel the request
-            return NavigationActionPolicy.CANCEL;
-          }
-        }
+        // if (url != null &&
+        //     (!url.toString().startsWith('https://scrapbox.io') ||
+        //         !url.toString().startsWith('https://accounts.google.com'))) {
+        //   if (await canLaunchUrl(url)) {
+        //     // Launch the App
+        //     await launchUrl(url);
+        //     // and cancel the request
+        //     return NavigationActionPolicy.CANCEL;
+        //   }
+        // }
 
         if (url != null &&
             !["http", "https", "file", "chrome", "data", "javascript", "about"]
