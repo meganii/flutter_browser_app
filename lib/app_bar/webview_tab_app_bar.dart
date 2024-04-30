@@ -94,7 +94,7 @@ class _WebViewTabAppBarState extends State<WebViewTabAppBar>
             _searchController?.text = url.toString();
           }
 
-          Widget? leading = _buildAppBarHomePageWidget();
+          // Widget? leading = _buildAppBarHomePageWidget();
 
           return Selector<WebViewModel, bool>(
               selector: (context, webViewModel) => webViewModel.isIncognitoMode,
@@ -131,80 +131,80 @@ class _WebViewTabAppBarState extends State<WebViewTabAppBar>
     );
   }
 
-  Widget _buildSearchTextField() {
-    var browserModel = Provider.of<BrowserModel>(context, listen: true);
-    var settings = browserModel.getSettings();
-
-    var webViewModel = Provider.of<WebViewModel>(context, listen: true);
-    var webViewController = webViewModel.webViewController;
-
-    return SizedBox(
-      height: 40.0,
-      child: Stack(
-        children: <Widget>[
-          TextField(
-            onSubmitted: (value) {
-              var url = WebUri(value.trim());
-              if (!url.scheme.startsWith("http") &&
-                  !Util.isLocalizedContent(url)) {
-                url = WebUri(settings.searchEngine.searchUrl + value);
-              }
-
-              if (webViewController != null) {
-                webViewController.loadUrl(urlRequest: URLRequest(url: url));
-              } else {
-                addNewTab(url: url);
-                webViewModel.url = url;
-              }
-            },
-            keyboardType: TextInputType.url,
-            focusNode: _focusNode,
-            autofocus: false,
-            controller: _searchController,
-            textInputAction: TextInputAction.go,
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.only(
-                  left: 45.0, top: 10.0, right: 10.0, bottom: 10.0),
-              filled: true,
-              fillColor: Colors.white,
-              border: outlineBorder,
-              focusedBorder: outlineBorder,
-              enabledBorder: outlineBorder,
-              hintText: "Search for or type a web address",
-              hintStyle: const TextStyle(color: Colors.black54, fontSize: 16.0),
-            ),
-            style: const TextStyle(color: Colors.black, fontSize: 16.0),
-          ),
-          IconButton(
-            icon: Selector<WebViewModel, bool>(
-              selector: (context, webViewModel) => webViewModel.isSecure,
-              builder: (context, isSecure, child) {
-                var icon = Icons.info_outline;
-                if (webViewModel.isIncognitoMode) {
-                  icon = MaterialCommunityIcons.incognito;
-                } else if (isSecure) {
-                  if (webViewModel.url != null &&
-                      webViewModel.url!.scheme == "file") {
-                    icon = Icons.offline_pin;
-                  } else {
-                    icon = Icons.lock;
-                  }
-                }
-
-                return Icon(
-                  icon,
-                  color: isSecure ? Colors.green : Colors.grey,
-                );
-              },
-            ),
-            onPressed: () {
-              showUrlInfo();
-            },
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildSearchTextField() {
+  //   var browserModel = Provider.of<BrowserModel>(context, listen: true);
+  //   var settings = browserModel.getSettings();
+  //
+  //   var webViewModel = Provider.of<WebViewModel>(context, listen: true);
+  //   var webViewController = webViewModel.webViewController;
+  //
+  //   return SizedBox(
+  //     height: 40.0,
+  //     child: Stack(
+  //       children: <Widget>[
+  //         TextField(
+  //           onSubmitted: (value) {
+  //             var url = WebUri(value.trim());
+  //             if (!url.scheme.startsWith("http") &&
+  //                 !Util.isLocalizedContent(url)) {
+  //               url = WebUri(settings.searchEngine.searchUrl + value);
+  //             }
+  //
+  //             if (webViewController != null) {
+  //               webViewController.loadUrl(urlRequest: URLRequest(url: url));
+  //             } else {
+  //               addNewTab(url: url);
+  //               webViewModel.url = url;
+  //             }
+  //           },
+  //           keyboardType: TextInputType.url,
+  //           focusNode: _focusNode,
+  //           autofocus: false,
+  //           controller: _searchController,
+  //           textInputAction: TextInputAction.go,
+  //           decoration: InputDecoration(
+  //             contentPadding: const EdgeInsets.only(
+  //                 left: 45.0, top: 10.0, right: 10.0, bottom: 10.0),
+  //             filled: true,
+  //             fillColor: Colors.white,
+  //             border: outlineBorder,
+  //             focusedBorder: outlineBorder,
+  //             enabledBorder: outlineBorder,
+  //             hintText: "Search for or type a web address",
+  //             hintStyle: const TextStyle(color: Colors.black54, fontSize: 16.0),
+  //           ),
+  //           style: const TextStyle(color: Colors.black, fontSize: 16.0),
+  //         ),
+  //         IconButton(
+  //           icon: Selector<WebViewModel, bool>(
+  //             selector: (context, webViewModel) => webViewModel.isSecure,
+  //             builder: (context, isSecure, child) {
+  //               var icon = Icons.info_outline;
+  //               if (webViewModel.isIncognitoMode) {
+  //                 icon = MaterialCommunityIcons.incognito;
+  //               } else if (isSecure) {
+  //                 if (webViewModel.url != null &&
+  //                     webViewModel.url!.scheme == "file") {
+  //                   icon = Icons.offline_pin;
+  //                 } else {
+  //                   icon = Icons.lock;
+  //                 }
+  //               }
+  //
+  //               return Icon(
+  //                 icon,
+  //                 color: isSecure ? Colors.green : Colors.grey,
+  //               );
+  //             },
+  //           ),
+  //           onPressed: () {
+  //             showUrlInfo();
+  //           },
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildActionsMenu() {
     var browserModel = Provider.of<BrowserModel>(context, listen: true);

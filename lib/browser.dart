@@ -78,7 +78,6 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
   Widget _buildBrowser() {
     var currentWebViewModel = Provider.of<WebViewModel>(context, listen: true);
     var browserModel = Provider.of<BrowserModel>(context, listen: true);
-    bool isKeyboardShown = 0 < MediaQuery.of(context).viewInsets.bottom;
 
     browserModel.addListener(() {
       browserModel.save();
