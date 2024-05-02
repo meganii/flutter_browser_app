@@ -6,10 +6,10 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_browser/models/favorite_model.dart';
-import 'package:flutter_browser/models/web_archive_model.dart';
-import 'package:flutter_browser/models/webview_model.dart';
-import 'package:flutter_browser/webview_tab.dart';
+import 'package:sbmoby/models/favorite_model.dart';
+import 'package:sbmoby/models/web_archive_model.dart';
+import 'package:sbmoby/models/webview_model.dart';
+import 'package:sbmoby/webview_tab.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
