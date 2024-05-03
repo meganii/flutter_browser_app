@@ -3,13 +3,13 @@ import 'dart:collection';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sbmoby/main.dart';
-import 'package:sbmoby/models/webview_model.dart';
-import 'package:sbmoby/util.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:sbmoby/main.dart';
+import 'package:sbmoby/models/webview_model.dart';
+import 'package:sbmoby/util.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'javascript_console_result.dart';
@@ -340,22 +340,27 @@ class _WebViewTabState extends State<WebViewTab> with WidgetsBindingObserver {
         }
       },
       shouldOverrideUrlLoading: (controller, navigationAction) async {
-        var url = navigationAction.request.url;
+        var url = navigationAction.request.url ?? WebUri('');
+        var allowDomainList = [
+          'scrapbox.io',
+          'accounts.google.com',
+          'google.com',
+          'www.google.com',
+          'accounts.youtube.com',
+          'accounts.google.co.jp',
+          'gyazo.com',
+        ];
+        if (!allowDomainList.any((d) => url.host.startsWith(d))) {
+          if (await canLaunchUrl(url)) {
+            // Launch the App
+            await launchUrl(url);
+            // and cancel the request
+            return NavigationActionPolicy.CANCEL;
+          }
+        }
 
-        // if (url != null &&
-        //     (!url.toString().startsWith('https://scrapbox.io') ||
-        //         !url.toString().startsWith('https://accounts.google.com'))) {
-        //   if (await canLaunchUrl(url)) {
-        //     // Launch the App
-        //     await launchUrl(url);
-        //     // and cancel the request
-        //     return NavigationActionPolicy.CANCEL;
-        //   }
-        // }
-
-        if (url != null &&
-            !["http", "https", "file", "chrome", "data", "javascript", "about"]
-                .contains(url.scheme)) {
+        if (!["http", "https", "file", "chrome", "data", "javascript", "about"]
+            .contains(url.scheme)) {
           if (await canLaunchUrl(url)) {
             // Launch the App
             await launchUrl(
