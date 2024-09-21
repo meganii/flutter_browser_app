@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sbmoby/webview_tab.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:provider/provider.dart';
+import 'package:sbmoby/webview_tab.dart';
 
 import 'models/browser_model.dart';
 import 'models/webview_model.dart';

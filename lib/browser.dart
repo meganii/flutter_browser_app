@@ -3,19 +3,18 @@ import 'dart:async';
 // import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sbmoby/models/webview_model.dart';
-import 'package:sbmoby/tab_viewer.dart';
-import 'package:sbmoby/util.dart';
-import 'package:sbmoby/webview_tab.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:sbmoby/models/webview_model.dart';
+import 'package:sbmoby/tab_viewer.dart';
+import 'package:sbmoby/util.dart';
+import 'package:sbmoby/webview_tab.dart';
 
 import 'app_bar/tab_viewer_app_bar.dart';
 import 'app_bar/webview_tab_app_bar.dart';
 import 'custom_image.dart';
-import 'empty_tab.dart';
 import 'models/browser_model.dart';
 
 class Browser extends StatefulWidget {
@@ -146,7 +145,13 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
     var browserModel = Provider.of<BrowserModel>(context, listen: true);
     bool isKeyboardShown = 0 < MediaQuery.of(context).viewInsets.bottom;
     if (browserModel.webViewTabs.isEmpty) {
-      return const EmptyTab();
+      // タブを開く前に
+      browserModel.addTab(WebViewTab(
+          key: GlobalKey(),
+          webViewModel: WebViewModel(
+            url: WebUri('https://scrapbox.io/'),
+          )));
+      // return const EmptyTab();
     }
 
     for (final webViewTab in browserModel.webViewTabs) {
