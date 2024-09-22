@@ -354,6 +354,12 @@ class _WebViewTabState extends State<WebViewTab> with WidgetsBindingObserver {
           if (await canLaunchUrl(url)) {
             // Launch the App
             await launchUrl(url);
+
+            // onCreateWindowで必ずblankページを作るので、削除する
+            if (widget.webViewModel.tabIndex != null &&
+                widget.webViewModel.url == WebUri("about:blank")) {
+              browserModel.closeTab(widget.webViewModel.tabIndex!);
+            }
             // and cancel the request
             return NavigationActionPolicy.CANCEL;
           }
