@@ -417,6 +417,37 @@ class _WebViewTabState extends State<WebViewTab> with WidgetsBindingObserver {
 
         var errorUrl = request.url;
 
+        _webViewController?.loadData(data: """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+    ${await InAppWebViewController.tRexRunnerCss}
+    </style>
+    <style>
+    .interstitial-wrapper {
+        box-sizing: border-box;
+        font-size: 1em;
+        line-height: 1.6em;
+        margin: 0 auto 0;
+        max-width: 600px;
+        width: 100%;
+    }
+    </style>
+</head>
+<body>
+    ${await InAppWebViewController.tRexRunnerHtml}
+    <div class="interstitial-wrapper">
+      <h1>Website not available</h1>
+      <p>Could not load web pages at <strong>$errorUrl</strong> because:</p>
+      <p>${error.description}</p>
+    </div>
+</body>
+    """, baseUrl: errorUrl, historyUrl: errorUrl);
+
         widget.webViewModel.url = errorUrl;
         widget.webViewModel.isSecure = false;
 

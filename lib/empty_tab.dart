@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:provider/provider.dart';
@@ -22,49 +23,25 @@ class _EmptyTabState extends State<EmptyTab> {
     var settings = browserModel.getSettings();
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image(image: AssetImage(settings.searchEngine.assetIcon)),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                    child: TextField(
-                  controller: _controller,
-                  onSubmitted: (value) {
-                    openNewTab(value);
-                  },
-                  textInputAction: TextInputAction.go,
-                  decoration: const InputDecoration(
-                    hintText: "Search for or type a web address",
-                    hintStyle: TextStyle(color: Colors.black54, fontSize: 25.0),
-                  ),
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 25.0,
-                  ),
-                )),
-                IconButton(
-                  icon: const Icon(Icons.search,
-                      color: Colors.black54, size: 25.0),
-                  onPressed: () {
-                    openNewTab(_controller.text);
-                    FocusScope.of(context).unfocus();
-                  },
-                )
-              ],
+        body: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
+      child: RichText(
+        text: TextSpan(
+          text: 'Go To ',
+          style: DefaultTextStyle.of(context).style,
+          children: <TextSpan>[
+            TextSpan(
+              text: 'Scrapbox',
+              style: const TextStyle(color: Colors.blue),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () async {
+                  openNewTab('https://scrapbox.io/');
+                },
             ),
           ],
         ),
       ),
-    );
+    ));
   }
 
   void openNewTab(value) {

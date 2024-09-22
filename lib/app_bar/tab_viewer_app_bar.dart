@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_font_icons/flutter_font_icons.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:provider/provider.dart';
 import 'package:sbmoby/models/browser_model.dart';
 import 'package:sbmoby/models/webview_model.dart';
 import 'package:sbmoby/pages/settings/main.dart';
 import 'package:sbmoby/webview_tab.dart';
-import 'package:flutter_font_icons/flutter_font_icons.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:provider/provider.dart';
 
 import '../custom_popup_menu_item.dart';
 import '../tab_viewer_popup_menu_actions.dart';
@@ -188,7 +188,7 @@ class _TabViewerAppBarState extends State<TabViewerAppBar> {
 
     url ??= settings.homePageEnabled && settings.customUrlHomePage.isNotEmpty
         ? WebUri(settings.customUrlHomePage)
-        : WebUri(settings.searchEngine.url);
+        : WebUri('https://scrapbox.io/');
 
     browserModel.showTabScroller = false;
 

@@ -83,8 +83,4 @@ flutter {
 }
 
 dependencies {
-    implementation 'com.google.android.material:material:1.8.0-alpha01'
-
-    def multidex_version = "2.0.1"
-    implementation "androidx.multidex:multidex:$multidex_version"
 }

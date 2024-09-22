@@ -7,6 +7,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:sbmoby/empty_tab.dart';
 import 'package:sbmoby/models/webview_model.dart';
 import 'package:sbmoby/tab_viewer.dart';
 import 'package:sbmoby/util.dart';
@@ -145,13 +146,7 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
     var browserModel = Provider.of<BrowserModel>(context, listen: true);
     bool isKeyboardShown = 0 < MediaQuery.of(context).viewInsets.bottom;
     if (browserModel.webViewTabs.isEmpty) {
-      // タブを開く前に
-      browserModel.addTab(WebViewTab(
-          key: GlobalKey(),
-          webViewModel: WebViewModel(
-            url: WebUri('https://scrapbox.io/'),
-          )));
-      // return const EmptyTab();
+      return const EmptyTab();
     }
 
     for (final webViewTab in browserModel.webViewTabs) {
