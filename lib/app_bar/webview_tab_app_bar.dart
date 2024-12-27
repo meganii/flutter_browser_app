@@ -210,6 +210,9 @@ class _WebViewTabAppBarState extends State<WebViewTabAppBar>
     var browserModel = Provider.of<BrowserModel>(context, listen: true);
     var settings = browserModel.getSettings();
 
+    var webViewModel = Provider.of<WebViewModel>(context, listen: true);
+    var webViewController = webViewModel.webViewController;
+
     return browserModel.showBottomAppBar
         ? SizedBox(
             height: 50,
@@ -221,10 +224,28 @@ class _WebViewTabAppBarState extends State<WebViewTabAppBar>
                   IconButton(
                     padding: const EdgeInsets.all(0.0),
                     icon: const Icon(Icons.home),
-                    onPressed: () {
-                      // ホームボタンがタップされた時の処理
+                    onPressed: () async {
+                      final currentUrl = await webViewController?.getUrl();
+                      final uri = Uri.parse(currentUrl.toString());
+                      final segments = uri.pathSegments;
+                      if (segments.isNotEmpty) {
+                        final projectName = segments.first;
+                        final homeUrl =
+                            Uri.https('scrapbox.io', '/$projectName')
+                                .toString();
+                        webViewController?.loadUrl(
+                            urlRequest: URLRequest(url: WebUri(homeUrl)));
+                      }
                     },
                   ),
+                  IconButton(
+                      padding: const EdgeInsets.all(0.0),
+                      icon: const Icon(Icons.shuffle),
+                      onPressed: () async {
+                        webViewController?.evaluateJavascript(source: '''
+      document.getElementsByClassName('random-jump-button')?.[0].click();
+    ''');
+                      }),
                   Row(
                     children: [
                       settings.homePageEnabled
