@@ -18,7 +18,6 @@ import 'package:sbmoby/pages/developers/main.dart';
 import 'package:sbmoby/pages/settings/main.dart';
 import 'package:sbmoby/tab_popup_menu_actions.dart';
 import 'package:sbmoby/util.dart';
-import 'package:share_extend/share_extend.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../animated_flutter_browser_logo.dart';
@@ -282,7 +281,7 @@ class _WebViewTabAppBarState extends State<WebViewTabAppBar>
                                         iconData = Icons.add;
                                         break;
                                       case TabPopupMenuActions
-                                            .NEW_INCOGNITO_TAB:
+                                          .NEW_INCOGNITO_TAB:
                                         iconData =
                                             MaterialCommunityIcons.incognito;
                                         break;
@@ -1167,7 +1166,7 @@ class _WebViewTabAppBarState extends State<WebViewTabAppBar>
               ElevatedButton(
                 child: const Text("Share"),
                 onPressed: () async {
-                  await ShareExtend.share(file.path, "image");
+                  await Share.share(file.path);
                 },
               )
             ],

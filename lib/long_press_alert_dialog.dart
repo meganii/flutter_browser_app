@@ -53,6 +53,9 @@ class _LongPressAlertDialogState extends State<LongPressAlertDialog> {
           ),
         ),
       ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5.0), // 角の丸みを設定
+      ),
     );
   }
 
@@ -67,12 +70,12 @@ class _LongPressAlertDialogState extends State<LongPressAlertDialog> {
             widget.requestFocusNodeHrefResult!.url != null &&
             widget.requestFocusNodeHrefResult!.url.toString().isNotEmpty)) {
       return <Widget>[
-        _buildLinkTile(),
-        const Divider(),
+        // _buildLinkTile(),
+        // const Divider(),
         _buildLinkPreview(),
         const Divider(),
         _buildOpenNewTab(),
-        _buildOpenNewIncognitoTab(),
+        // _buildOpenNewIncognitoTab(),
         _buildCopyAddressLink(),
         _buildShareLink(),
       ];
@@ -138,10 +141,10 @@ class _LongPressAlertDialogState extends State<LongPressAlertDialog> {
     browserModel.getSettings();
 
     return ListTile(
-      title: const Center(child: Text("Link Preview")),
+      // title: const Center(child: Text("Link Preview")),
       subtitle: Container(
         padding: const EdgeInsets.only(top: 15.0),
-        height: 250,
+        height: 500,
         child: IndexedStack(
           index: _isLinkPreviewReady ? 1 : 0,
           children: <Widget>[
