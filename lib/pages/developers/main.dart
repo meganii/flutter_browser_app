@@ -1,7 +1,7 @@
+import 'package:comoreby/pages/developers/javascript_console.dart';
+import 'package:comoreby/pages/developers/network_info.dart';
+import 'package:comoreby/pages/developers/storage_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:sbmoby/pages/developers/javascript_console.dart';
-import 'package:sbmoby/pages/developers/network_info.dart';
-import 'package:sbmoby/pages/developers/storage_manager.dart';
 
 class DevelopersPage extends StatefulWidget {
   const DevelopersPage({Key? key}) : super(key: key);

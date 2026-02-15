@@ -1,6 +1,6 @@
+import 'package:comoreby/models/browser_model.dart';
+import 'package:comoreby/models/webview_model.dart';
 import 'package:flutter/material.dart';
-import 'package:sbmoby/models/browser_model.dart';
-import 'package:sbmoby/models/webview_model.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:provider/provider.dart';

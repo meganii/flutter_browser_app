@@ -1,8 +1,8 @@
+import 'package:comoreby/models/browser_model.dart';
+import 'package:comoreby/models/webview_model.dart';
+import 'package:comoreby/util.dart';
+import 'package:comoreby/webview_tab.dart';
 import 'package:flutter/material.dart';
-import 'package:sbmoby/models/browser_model.dart';
-import 'package:sbmoby/models/webview_model.dart';
-import 'package:sbmoby/util.dart';
-import 'package:sbmoby/webview_tab.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:provider/provider.dart';
@@ -49,7 +49,7 @@ class _ProjectInfoPopupState extends State<ProjectInfoPopup> {
           text: const TextSpan(children: [
             TextSpan(text: "Github: ", style: TextStyle(color: Colors.black)),
             TextSpan(
-                text: "pichillilorenzo/flutter_inappwebview",
+                text: "meganii/flutter_inappwebview",
                 style: TextStyle(color: Colors.blue))
           ]),
         ),
@@ -58,8 +58,7 @@ class _ProjectInfoPopupState extends State<ProjectInfoPopup> {
           browserModel.addTab(WebViewTab(
             key: GlobalKey(),
             webViewModel: WebViewModel(
-                url: WebUri(
-                    "https://github.com/pichillilorenzo/flutter_inappwebview")),
+                url: WebUri("https://github.com/meganii/flutter_inappwebview")),
           ));
           Navigator.pop(context);
         },
@@ -81,7 +80,7 @@ class _ProjectInfoPopupState extends State<ProjectInfoPopup> {
           text: const TextSpan(children: [
             TextSpan(text: "Github: ", style: TextStyle(color: Colors.black)),
             TextSpan(
-                text: "pichillilorenzo/flutter_browser_app",
+                text: "meganii/flutter_browser_app",
                 style: TextStyle(color: Colors.blue))
           ]),
         ),
@@ -90,8 +89,7 @@ class _ProjectInfoPopupState extends State<ProjectInfoPopup> {
           browserModel.addTab(WebViewTab(
             key: GlobalKey(),
             webViewModel: WebViewModel(
-                url: WebUri(
-                    "https://github.com/pichillilorenzo/flutter_browser_app")),
+                url: WebUri("https://github.com/meganii/flutter_browser_app")),
           ));
           Navigator.pop(context);
         },

@@ -1,7 +1,7 @@
+import 'package:comoreby/javascript_console_result.dart';
+import 'package:comoreby/models/browser_model.dart';
+import 'package:comoreby/models/webview_model.dart';
 import 'package:flutter/material.dart';
-import 'package:sbmoby/javascript_console_result.dart';
-import 'package:sbmoby/models/browser_model.dart';
-import 'package:sbmoby/models/webview_model.dart';
 import 'package:provider/provider.dart';
 
 class JavaScriptConsole extends StatefulWidget {

@@ -1,5 +1,10 @@
 import 'dart:async';
 
+import 'package:comoreby/empty_tab.dart';
+import 'package:comoreby/models/webview_model.dart';
+import 'package:comoreby/tab_viewer.dart';
+import 'package:comoreby/util.dart';
+import 'package:comoreby/webview_tab.dart';
 // import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,11 +12,6 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:sbmoby/empty_tab.dart';
-import 'package:sbmoby/models/webview_model.dart';
-import 'package:sbmoby/tab_viewer.dart';
-import 'package:sbmoby/util.dart';
-import 'package:sbmoby/webview_tab.dart';
 
 import 'app_bar/tab_viewer_app_bar.dart';
 import 'app_bar/webview_tab_app_bar.dart';
@@ -26,8 +26,7 @@ class Browser extends StatefulWidget {
 }
 
 class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
-  static const platform =
-      MethodChannel('com.pichillilorenzo.flutter_browser.intent_data');
+  static const platform = MethodChannel('com.meganii.comoreby.intent_data');
 
   var _isRestored = false;
 

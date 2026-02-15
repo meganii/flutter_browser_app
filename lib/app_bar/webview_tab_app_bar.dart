@@ -1,23 +1,23 @@
 // import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:io';
 
+import 'package:comoreby/app_bar/url_info_popup.dart';
+import 'package:comoreby/custom_image.dart';
+import 'package:comoreby/main.dart';
+import 'package:comoreby/models/browser_model.dart';
+import 'package:comoreby/models/favorite_model.dart';
+import 'package:comoreby/models/web_archive_model.dart';
+import 'package:comoreby/models/webview_model.dart';
+import 'package:comoreby/pages/developers/main.dart';
+import 'package:comoreby/pages/settings/main.dart';
+import 'package:comoreby/tab_popup_menu_actions.dart';
+import 'package:comoreby/util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:sbmoby/app_bar/url_info_popup.dart';
-import 'package:sbmoby/custom_image.dart';
-import 'package:sbmoby/main.dart';
-import 'package:sbmoby/models/browser_model.dart';
-import 'package:sbmoby/models/favorite_model.dart';
-import 'package:sbmoby/models/web_archive_model.dart';
-import 'package:sbmoby/models/webview_model.dart';
-import 'package:sbmoby/pages/developers/main.dart';
-import 'package:sbmoby/pages/settings/main.dart';
-import 'package:sbmoby/tab_popup_menu_actions.dart';
-import 'package:sbmoby/util.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../animated_flutter_browser_logo.dart';

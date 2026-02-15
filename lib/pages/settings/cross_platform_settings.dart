@@ -1,9 +1,9 @@
+import 'package:comoreby/models/browser_model.dart';
+import 'package:comoreby/models/search_engine_model.dart';
+import 'package:comoreby/models/webview_model.dart';
+import 'package:comoreby/util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sbmoby/models/browser_model.dart';
-import 'package:sbmoby/models/search_engine_model.dart';
-import 'package:sbmoby/models/webview_model.dart';
-import 'package:sbmoby/util.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';

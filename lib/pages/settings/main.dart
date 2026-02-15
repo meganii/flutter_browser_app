@@ -1,9 +1,9 @@
+import 'package:comoreby/models/browser_model.dart';
+import 'package:comoreby/models/webview_model.dart';
+import 'package:comoreby/pages/settings/android_settings.dart';
+import 'package:comoreby/pages/settings/cross_platform_settings.dart';
+import 'package:comoreby/pages/settings/ios_settings.dart';
 import 'package:flutter/material.dart';
-import 'package:sbmoby/models/browser_model.dart';
-import 'package:sbmoby/models/webview_model.dart';
-import 'package:sbmoby/pages/settings/android_settings.dart';
-import 'package:sbmoby/pages/settings/cross_platform_settings.dart';
-import 'package:sbmoby/pages/settings/ios_settings.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:provider/provider.dart';
