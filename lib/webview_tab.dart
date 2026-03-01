@@ -516,12 +516,12 @@ class _WebViewTabState extends State<WebViewTab> with WidgetsBindingObserver {
       initialUserScripts: UnmodifiableListView<UserScript>(
         [
           UserScript(source: """
-function sbmobyCopy() {
+function comorebyCopy() {
     const textInput = document.getElementById("text-input");
     window.flutter_inappwebview.callHandler('handlerCopy', textInput.value);
 }
 
-function sbmobyCut() {
+function comorebyCut() {
     const textInput = document.getElementById("text-input");
     window.flutter_inappwebview.callHandler('handlerCopy', textInput.value);
     const options = {
@@ -533,7 +533,7 @@ function sbmobyCut() {
     document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
 }
 
-function sbmobyIndent() {
+function comorebyIndent() {
     const options = {
       bubbles: true,
       cancelable: true,
@@ -544,7 +544,7 @@ function sbmobyIndent() {
     document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
 }
 
-function sbmobyOutdent() {
+function comorebyOutdent() {
     const options = {
       bubbles: true,
       cancelable: true,
@@ -555,7 +555,7 @@ function sbmobyOutdent() {
     document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
 }
 
-function sbmobyUpLines() {
+function comorebyUpLines() {
     const options = {
       bubbles: true,
       cancelable: true,
@@ -566,7 +566,7 @@ function sbmobyUpLines() {
     document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
 }
 
-function sbmobyDownLines() {
+function comorebyDownLines() {
     const options = {
       bubbles: true,
       cancelable: true,
@@ -577,7 +577,7 @@ function sbmobyDownLines() {
     document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
 }
 
-function sbmobyAddIcon() {
+function comorebyAddIcon() {
   const options = {
     bubbles: true,
     cancelable: true,
@@ -588,7 +588,7 @@ function sbmobyAddIcon() {
   document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
 }
 
-function sbmobyUndo() {
+function comorebyUndo() {
   const options = {
     bubbles: true,
     cancelable: true,
@@ -599,7 +599,7 @@ function sbmobyUndo() {
   document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
 }
 
-function sbmobyBackspace() {
+function comorebyBackspace() {
   const options = {
     bubbles: true,
     cancelable: true,
