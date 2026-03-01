@@ -1,5 +1,14 @@
 import 'dart:async';
 
+import 'package:comoreby/app_bar/tab_viewer_app_bar.dart';
+import 'package:comoreby/app_bar/webview_tab_app_bar.dart';
+import 'package:comoreby/custom_image.dart';
+import 'package:comoreby/empty_tab.dart';
+import 'package:comoreby/models/browser_model.dart';
+import 'package:comoreby/models/webview_model.dart';
+import 'package:comoreby/tab_viewer.dart';
+import 'package:comoreby/util.dart';
+import 'package:comoreby/webview_tab.dart';
 // import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,16 +16,6 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:sbmoby/empty_tab.dart';
-import 'package:sbmoby/models/webview_model.dart';
-import 'package:sbmoby/tab_viewer.dart';
-import 'package:sbmoby/util.dart';
-import 'package:sbmoby/webview_tab.dart';
-
-import 'app_bar/tab_viewer_app_bar.dart';
-import 'app_bar/webview_tab_app_bar.dart';
-import 'custom_image.dart';
-import 'models/browser_model.dart';
 
 class Browser extends StatefulWidget {
   const Browser({Key? key}) : super(key: key);
@@ -26,8 +25,7 @@ class Browser extends StatefulWidget {
 }
 
 class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
-  static const platform =
-      MethodChannel('com.pichillilorenzo.flutter_browser.intent_data');
+  static const platform = MethodChannel('com.meganii.comoreby.intent_data');
 
   var _isRestored = false;
 
@@ -188,7 +186,7 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
                   child: IconButton(
                     onPressed: () async {
                       currentTab?.webViewModel.webViewController
-                          ?.evaluateJavascript(source: 'sbmobyOutdent();');
+                          ?.evaluateJavascript(source: 'comorebyOutdent();');
                     },
                     icon: const Icon(
                       Icons.chevron_left,
@@ -200,7 +198,7 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
                   child: IconButton(
                     onPressed: () async {
                       currentTab?.webViewModel.webViewController
-                          ?.evaluateJavascript(source: 'sbmobyIndent();');
+                          ?.evaluateJavascript(source: 'comorebyIndent();');
                     },
                     icon: const Icon(
                       Icons.chevron_right,
@@ -212,7 +210,7 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
                   child: IconButton(
                     onPressed: () async {
                       currentTab?.webViewModel.webViewController
-                          ?.evaluateJavascript(source: 'sbmobyUpLines();');
+                          ?.evaluateJavascript(source: 'comorebyUpLines();');
                     },
                     icon: const Icon(
                       Icons.expand_less,
@@ -224,7 +222,7 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
                   child: IconButton(
                     onPressed: () async {
                       currentTab?.webViewModel.webViewController
-                          ?.evaluateJavascript(source: 'sbmobyDownLines();');
+                          ?.evaluateJavascript(source: 'comorebyDownLines();');
                     },
                     icon: const Icon(
                       Icons.expand_more,
@@ -246,7 +244,7 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
                               onPressed: () async {
                                 currentTab?.webViewModel.webViewController
                                     ?.evaluateJavascript(
-                                        source: 'sbmobyCut();');
+                                        source: 'comorebyCut();');
                               },
                               icon: const Icon(
                                 Icons.content_cut,
@@ -278,7 +276,7 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
                               onPressed: () async {
                                 currentTab?.webViewModel.webViewController
                                     ?.evaluateJavascript(
-                                        source: 'sbmobyUndo();');
+                                        source: 'comorebyUndo();');
                               },
                               icon: const Icon(
                                 Icons.replay,
@@ -291,7 +289,7 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
                               onPressed: () async {
                                 currentTab?.webViewModel.webViewController
                                     ?.evaluateJavascript(
-                                        source: 'sbmobyAddIcon();');
+                                        source: 'comorebyAddIcon();');
                               },
                               icon: const Icon(
                                 Icons.face,
@@ -305,7 +303,7 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
                               onTap: () async {
                                 currentTab?.webViewModel.webViewController
                                     ?.evaluateJavascript(
-                                        source: 'sbmobyBackspace();');
+                                        source: 'comorebyBackspace();');
                               },
                               child: const Icon(
                                 Icons.backspace,

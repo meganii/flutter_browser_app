@@ -1,5 +1,11 @@
 import 'dart:collection';
 
+import 'package:comoreby/javascript_console_result.dart';
+import 'package:comoreby/long_press_alert_dialog.dart';
+import 'package:comoreby/main.dart';
+import 'package:comoreby/models/browser_model.dart';
+import 'package:comoreby/models/webview_model.dart';
+import 'package:comoreby/util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,14 +13,7 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:sbmoby/main.dart';
-import 'package:sbmoby/models/webview_model.dart';
-import 'package:sbmoby/util.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'javascript_console_result.dart';
-import 'long_press_alert_dialog.dart';
-import 'models/browser_model.dart';
 
 final webViewTabStateKey = GlobalKey<_WebViewTabState>();
 
@@ -516,68 +515,68 @@ class _WebViewTabState extends State<WebViewTab> with WidgetsBindingObserver {
       initialUserScripts: UnmodifiableListView<UserScript>(
         [
           UserScript(source: """
-function sbmobyCopy() {
-    const textInput = document.getElementById("text-input");
-    window.flutter_inappwebview.callHandler('handlerCopy', textInput.value);
+function comorebyCopy() {
+  const textInput = document.getElementById("text-input");
+  window.flutter_inappwebview.callHandler('handlerCopy', textInput.value);
 }
 
-function sbmobyCut() {
-    const textInput = document.getElementById("text-input");
-    window.flutter_inappwebview.callHandler('handlerCopy', textInput.value);
-    const options = {
-      bubbles: true,
-      cancelable: true,
-      keyCode: 8, // Backspace
-    };
-    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
-    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
+function comorebyCut() {
+  const textInput = document.getElementById("text-input");
+  window.flutter_inappwebview.callHandler('handlerCopy', textInput.value);
+  const options = {
+    bubbles: true,
+    cancelable: true,
+    keyCode: 8, // Backspace
+  };
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
 }
 
-function sbmobyIndent() {
-    const options = {
-      bubbles: true,
-      cancelable: true,
-      keyCode: 39,  // ArrowRight
-      ctrlKey: true,
-    };
-    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
-    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
+function comorebyIndent() {
+  const options = {
+    bubbles: true,
+    cancelable: true,
+    keyCode: 39,  // ArrowRight
+    ctrlKey: true,
+  };
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
 }
 
-function sbmobyOutdent() {
-    const options = {
-      bubbles: true,
-      cancelable: true,
-      keyCode: 37,  // ArrowLeft
-      ctrlKey: true,
-    };
-    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
-    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
+function comorebyOutdent() {
+  const options = {
+    bubbles: true,
+    cancelable: true,
+    keyCode: 37,  // ArrowLeft
+    ctrlKey: true,
+  };
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
 }
 
-function sbmobyUpLines() {
-    const options = {
-      bubbles: true,
-      cancelable: true,
-      keyCode: 38,
-      ctrlKey: true,
-    };
-    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
-    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
+function comorebyUpLines() {
+  const options = {
+    bubbles: true,
+    cancelable: true,
+    keyCode: 38,
+    ctrlKey: true,
+  };
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
 }
 
-function sbmobyDownLines() {
-    const options = {
-      bubbles: true,
-      cancelable: true,
-      keyCode: 40,
-      ctrlKey: true,
-    };
-    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
-    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
+function comorebyDownLines() {
+  const options = {
+    bubbles: true,
+    cancelable: true,
+    keyCode: 40,
+    ctrlKey: true,
+  };
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
 }
 
-function sbmobyAddIcon() {
+function comorebyAddIcon() {
   const options = {
     bubbles: true,
     cancelable: true,
@@ -588,7 +587,7 @@ function sbmobyAddIcon() {
   document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
 }
 
-function sbmobyUndo() {
+function comorebyUndo() {
   const options = {
     bubbles: true,
     cancelable: true,
@@ -599,7 +598,7 @@ function sbmobyUndo() {
   document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
 }
 
-function sbmobyBackspace() {
+function comorebyBackspace() {
   const options = {
     bubbles: true,
     cancelable: true,

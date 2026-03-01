@@ -33,12 +33,12 @@ android {
     ndkVersion flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = JavaVersion.VERSION_17
     }
 
     sourceSets {
@@ -47,7 +47,7 @@ android {
 
 
     defaultConfig {
-        applicationId "com.meganii.sbmoby"
+        applicationId 'com.meganii.comoreby'
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
@@ -72,7 +72,7 @@ android {
             crunchPngs false
         }
     }
-    namespace 'com.pichillilorenzo.flutter_browser'
+    namespace 'com.meganii.comoreby'
     lint {
         disable 'InvalidPackage'
     }

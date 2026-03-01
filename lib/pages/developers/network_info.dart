@@ -1,12 +1,12 @@
 // import 'package:cached_network_image/cached_network_image.dart';
+import 'package:comoreby/custom_image.dart';
+import 'package:comoreby/models/webview_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mime/mime.dart';
 import 'package:provider/provider.dart';
-import 'package:sbmoby/custom_image.dart';
-import 'package:sbmoby/models/webview_model.dart';
 // import 'package:charts_flutter/flutter.dart' as charts;
 
 class NetworkInfo extends StatefulWidget {

@@ -1,10 +1,10 @@
+import 'package:comoreby/models/browser_model.dart';
+import 'package:comoreby/models/webview_model.dart';
+import 'package:comoreby/multiselect_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:provider/provider.dart';
-import 'package:sbmoby/models/browser_model.dart';
-import 'package:sbmoby/models/webview_model.dart';
-import 'package:sbmoby/multiselect_dialog.dart';
 
 class IOSSettings extends StatefulWidget {
   const IOSSettings({Key? key}) : super(key: key);

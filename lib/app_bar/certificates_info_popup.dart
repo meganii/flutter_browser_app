@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
+import 'package:comoreby/models/webview_model.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,6 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:sbmoby/models/webview_model.dart';
 
 class CertificateInfoPopup extends StatefulWidget {
   const CertificateInfoPopup({super.key});
@@ -156,7 +156,7 @@ class _CertificateInfoPopupState extends State<CertificateInfoPopup> {
                         children: <Widget>[
                           Expanded(
                             child: Text(
-                              "Flutter Browser has verified that ${_topMainCertificate?.issuer(dn: ASN1DistinguishedNames.COMMON_NAME)} has emitted the web site certificate.",
+                              "Comoreby has verified that ${_topMainCertificate?.issuer(dn: ASN1DistinguishedNames.COMMON_NAME)} has emitted the web site certificate.",
                               softWrap: true,
                               style: const TextStyle(fontSize: 12.0),
                             ),

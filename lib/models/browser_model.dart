@@ -4,16 +4,15 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:collection/collection.dart';
+import 'package:comoreby/models/favorite_model.dart';
+import 'package:comoreby/models/search_engine_model.dart';
+import 'package:comoreby/models/web_archive_model.dart';
+import 'package:comoreby/models/webview_model.dart';
+import 'package:comoreby/webview_tab.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:sbmoby/models/favorite_model.dart';
-import 'package:sbmoby/models/web_archive_model.dart';
-import 'package:sbmoby/models/webview_model.dart';
-import 'package:sbmoby/webview_tab.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'search_engine_model.dart';
 
 class BrowserSettings {
   SearchEngineModel searchEngine;
