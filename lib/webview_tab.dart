@@ -517,64 +517,64 @@ class _WebViewTabState extends State<WebViewTab> with WidgetsBindingObserver {
         [
           UserScript(source: """
 function comorebyCopy() {
-    const textInput = document.getElementById("text-input");
-    window.flutter_inappwebview.callHandler('handlerCopy', textInput.value);
+  const textInput = document.getElementById("text-input");
+  window.flutter_inappwebview.callHandler('handlerCopy', textInput.value);
 }
 
 function comorebyCut() {
-    const textInput = document.getElementById("text-input");
-    window.flutter_inappwebview.callHandler('handlerCopy', textInput.value);
-    const options = {
-      bubbles: true,
-      cancelable: true,
-      keyCode: 8, // Backspace
-    };
-    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
-    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
+  const textInput = document.getElementById("text-input");
+  window.flutter_inappwebview.callHandler('handlerCopy', textInput.value);
+  const options = {
+    bubbles: true,
+    cancelable: true,
+    keyCode: 8, // Backspace
+  };
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
 }
 
 function comorebyIndent() {
-    const options = {
-      bubbles: true,
-      cancelable: true,
-      keyCode: 39,  // ArrowRight
-      ctrlKey: true,
-    };
-    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
-    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
+  const options = {
+    bubbles: true,
+    cancelable: true,
+    keyCode: 39,  // ArrowRight
+    ctrlKey: true,
+  };
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
 }
 
 function comorebyOutdent() {
-    const options = {
-      bubbles: true,
-      cancelable: true,
-      keyCode: 37,  // ArrowLeft
-      ctrlKey: true,
-    };
-    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
-    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
+  const options = {
+    bubbles: true,
+    cancelable: true,
+    keyCode: 37,  // ArrowLeft
+    ctrlKey: true,
+  };
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
 }
 
 function comorebyUpLines() {
-    const options = {
-      bubbles: true,
-      cancelable: true,
-      keyCode: 38,
-      ctrlKey: true,
-    };
-    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
-    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
+  const options = {
+    bubbles: true,
+    cancelable: true,
+    keyCode: 38,
+    ctrlKey: true,
+  };
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
 }
 
 function comorebyDownLines() {
-    const options = {
-      bubbles: true,
-      cancelable: true,
-      keyCode: 40,
-      ctrlKey: true,
-    };
-    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
-    document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
+  const options = {
+    bubbles: true,
+    cancelable: true,
+    keyCode: 40,
+    ctrlKey: true,
+  };
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
+  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
 }
 
 function comorebyAddIcon() {
