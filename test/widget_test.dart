@@ -1,29 +1,33 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility that Flutter provides. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:comoreby/main.dart';
-import 'package:flutter/material.dart';
+import 'package:comoreby/models/browser_model.dart';
+import 'package:comoreby/models/search_engine_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const FlutterBrowserApp());
+  test('BrowserSettings defaults are Cosense-first', () {
+    final settings = BrowserSettings();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(settings.searchEngine, CosenseSearchEngine);
+    expect(settings.homePageEnabled, isTrue);
+    expect(settings.customUrlHomePage, 'https://scrapbox.io/');
+    expect(settings.debuggingEnabled, isFalse);
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  test('BrowserSettings.fromMap falls back to Cosense on invalid index', () {
+    final restored = BrowserSettings.fromMap({
+      'searchEngineIndex': 999,
+      'homePageEnabled': true,
+      'customUrlHomePage': '',
+      'debuggingEnabled': false,
+    });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(restored, isNotNull);
+    expect(restored!.searchEngine, CosenseSearchEngine);
+    expect(restored.customUrlHomePage, 'https://scrapbox.io/');
+  });
+
+  test('Search engine list is restricted to Cosense', () {
+    expect(SearchEngines, hasLength(1));
+    expect(SearchEngines.first, CosenseSearchEngine);
+    expect(SearchEngines.first.url, 'https://scrapbox.io/');
   });
 }

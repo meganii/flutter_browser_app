@@ -1,6 +1,9 @@
 import 'dart:collection';
 
+import 'package:comoreby/javascript_console_result.dart';
+import 'package:comoreby/long_press_alert_dialog.dart';
 import 'package:comoreby/main.dart';
+import 'package:comoreby/models/browser_model.dart';
 import 'package:comoreby/models/webview_model.dart';
 import 'package:comoreby/util.dart';
 import 'package:flutter/foundation.dart';
@@ -11,10 +14,6 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'javascript_console_result.dart';
-import 'long_press_alert_dialog.dart';
-import 'models/browser_model.dart';
 
 final webViewTabStateKey = GlobalKey<_WebViewTabState>();
 

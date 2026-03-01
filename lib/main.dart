@@ -1,3 +1,4 @@
+import 'package:comoreby/browser.dart';
 import 'package:comoreby/models/browser_model.dart';
 import 'package:comoreby/models/webview_model.dart';
 import 'package:flutter/foundation.dart';
@@ -6,8 +7,6 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-
-import 'browser.dart';
 
 // ignore: non_constant_identifier_names
 late final String WEB_ARCHIVE_DIR;

@@ -1,11 +1,10 @@
+import 'package:comoreby/models/browser_model.dart';
+import 'package:comoreby/models/webview_model.dart';
 import 'package:comoreby/webview_tab.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:provider/provider.dart';
-
-import 'models/browser_model.dart';
-import 'models/webview_model.dart';
 
 class EmptyTab extends StatefulWidget {
   const EmptyTab({Key? key}) : super(key: key);
@@ -31,7 +30,7 @@ class _EmptyTabState extends State<EmptyTab> {
           style: DefaultTextStyle.of(context).style,
           children: <TextSpan>[
             TextSpan(
-              text: 'Scrapbox',
+              text: 'Cosense',
               style: const TextStyle(color: Colors.blue),
               recognizer: TapGestureRecognizer()
                 ..onTap = () async {

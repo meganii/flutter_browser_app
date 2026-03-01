@@ -2,6 +2,8 @@
 import 'dart:io';
 
 import 'package:comoreby/custom_image.dart';
+import 'package:comoreby/models/browser_model.dart';
+import 'package:comoreby/models/webview_model.dart';
 import 'package:comoreby/webview_tab.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -12,9 +14,6 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-
-import 'models/browser_model.dart';
-import 'models/webview_model.dart';
 
 class LongPressAlertDialog extends StatefulWidget {
   static const List<InAppWebViewHitTestResultType> hitTestResultSupported = [

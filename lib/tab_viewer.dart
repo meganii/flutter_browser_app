@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:comoreby/main.dart';
 import 'package:flutter/material.dart';
-
-import 'main.dart';
 
 class ScrollableTab extends StatefulWidget {
   final Widget child;

@@ -1,6 +1,10 @@
 import 'dart:async';
 
+import 'package:comoreby/app_bar/tab_viewer_app_bar.dart';
+import 'package:comoreby/app_bar/webview_tab_app_bar.dart';
+import 'package:comoreby/custom_image.dart';
 import 'package:comoreby/empty_tab.dart';
+import 'package:comoreby/models/browser_model.dart';
 import 'package:comoreby/models/webview_model.dart';
 import 'package:comoreby/tab_viewer.dart';
 import 'package:comoreby/util.dart';
@@ -12,11 +16,6 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-
-import 'app_bar/tab_viewer_app_bar.dart';
-import 'app_bar/webview_tab_app_bar.dart';
-import 'custom_image.dart';
-import 'models/browser_model.dart';
 
 class Browser extends StatefulWidget {
   const Browser({Key? key}) : super(key: key);
