@@ -18,7 +18,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class Browser extends StatefulWidget {
-  const Browser({Key? key}) : super(key: key);
+  const Browser({super.key});
 
   @override
   State<Browser> createState() => _BrowserState();

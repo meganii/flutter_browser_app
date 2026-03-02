@@ -8,7 +8,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
 class CrossPlatformSettings extends StatefulWidget {
-  const CrossPlatformSettings({Key? key}) : super(key: key);
+  const CrossPlatformSettings({super.key});
 
   @override
   State<CrossPlatformSettings> createState() => _CrossPlatformSettingsState();

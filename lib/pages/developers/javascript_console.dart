@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class JavaScriptConsole extends StatefulWidget {
-  const JavaScriptConsole({Key? key}) : super(key: key);
+  const JavaScriptConsole({super.key});
 
   @override
   State<JavaScriptConsole> createState() => _JavaScriptConsoleState();

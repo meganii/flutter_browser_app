@@ -18,7 +18,7 @@ import 'package:url_launcher/url_launcher.dart';
 final webViewTabStateKey = GlobalKey<_WebViewTabState>();
 
 class WebViewTab extends StatefulWidget {
-  const WebViewTab({Key? key, required this.webViewModel}) : super(key: key);
+  const WebViewTab({super.key, required this.webViewModel});
 
   final WebViewModel webViewModel;
 
