@@ -107,7 +107,8 @@ class _UrlInfoPopupState extends State<UrlInfoPopup> {
                 style: const TextStyle(color: Colors.blue),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () async {
-                    Navigator.maybePop(context);
+                    final dialogContext = context;
+                    Navigator.maybePop(dialogContext);
 
                     await widget.route.popped;
 
@@ -115,8 +116,11 @@ class _UrlInfoPopupState extends State<UrlInfoPopup> {
                         milliseconds:
                             widget.transitionDuration.inMilliseconds - 200));
 
+                    if (!dialogContext.mounted) {
+                      return;
+                    }
                     showDialog(
-                      context: context,
+                      context: dialogContext,
                       builder: (context) {
                         return const CertificateInfoPopup();
                       },

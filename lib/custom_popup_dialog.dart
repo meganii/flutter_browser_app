@@ -91,6 +91,7 @@ class _CustomPopupDialogState extends State<CustomPopupDialog>
     with SingleTickerProviderStateMixin {
   late AnimationController _slideController;
   late Animation<Offset> _offsetSlideAnimation;
+  bool _isClosing = false;
 
   @override
   void initState() {
@@ -120,10 +121,13 @@ class _CustomPopupDialogState extends State<CustomPopupDialog>
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        await hideTransition();
-        return true;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop || _isClosing) {
+          return;
+        }
+        await _closeWithAnimation();
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -148,6 +152,14 @@ class _CustomPopupDialogState extends State<CustomPopupDialog>
   }
 
   Future<void> hide() async {
+    await _closeWithAnimation();
+  }
+
+  Future<void> _closeWithAnimation() async {
+    if (_isClosing) {
+      return;
+    }
+    _isClosing = true;
     await hideTransition();
     if (mounted) {
       Navigator.pop(context);

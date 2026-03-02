@@ -49,27 +49,10 @@ class _CrossPlatformSettingsState extends State<CrossPlatformSettings> {
         title: Text("General Settings"),
         enabled: false,
       ),
-      ListTile(
-        title: const Text("Search Engine"),
-        subtitle: Text(settings.searchEngine.name),
-        trailing: DropdownButton<SearchEngineModel>(
-          hint: const Text("Search Engine"),
-          onChanged: (value) {
-            setState(() {
-              if (value != null) {
-                settings.searchEngine = value;
-              }
-              browserModel.updateSettings(settings);
-            });
-          },
-          value: settings.searchEngine,
-          items: SearchEngines.map((searchEngine) {
-            return DropdownMenuItem(
-              value: searchEngine,
-              child: Text(searchEngine.name),
-            );
-          }).toList(),
-        ),
+      const ListTile(
+        title: Text("Service"),
+        subtitle: Text("Cosense (scrapbox.io)"),
+        trailing: Icon(Icons.lock_outline),
       ),
       ListTile(
         title: const Text("Home page"),
@@ -193,39 +176,6 @@ class _CrossPlatformSettingsState extends State<CrossPlatformSettings> {
           );
         },
       ),
-      ListTile(
-        leading: Container(
-          height: 35,
-          width: 35,
-          margin: const EdgeInsets.only(top: 6.0, left: 6.0),
-          child: const CircleAvatar(
-              backgroundImage: AssetImage("assets/icon/icon.png")),
-        ),
-        title: const Text("Flutter InAppWebView Project"),
-        subtitle: const Text(
-            "https://github.com/pichillilorenzo/flutter_inappwebview"),
-        trailing: const Icon(Icons.arrow_forward),
-        onLongPress: () {
-          showGeneralDialog(
-            context: context,
-            barrierDismissible: false,
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return const ProjectInfoPopup();
-            },
-            transitionDuration: const Duration(milliseconds: 300),
-          );
-        },
-        onTap: () {
-          showGeneralDialog(
-            context: context,
-            barrierDismissible: false,
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return const ProjectInfoPopup();
-            },
-            transitionDuration: const Duration(milliseconds: 300),
-          );
-        },
-      )
     ];
 
     if (Util.isAndroid()) {

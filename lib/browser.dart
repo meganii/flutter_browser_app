@@ -50,14 +50,24 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   restore() async {
-    var browserModel = Provider.of<BrowserModel>(context, listen: true);
-    browserModel.restore();
+    var browserModel = Provider.of<BrowserModel>(context, listen: false);
+    await browserModel.restore();
+
+    if (!mounted || browserModel.webViewTabs.isNotEmpty) {
+      return;
+    }
+
+    final settings = browserModel.getSettings();
+    final initialUrl =
+        settings.homePageEnabled && settings.customUrlHomePage.trim().isNotEmpty
+            ? settings.customUrlHomePage.trim()
+            : 'https://scrapbox.io/';
+
+    browserModel.addTab(WebViewTab(
+      key: GlobalKey(),
+      webViewModel: WebViewModel(url: WebUri(initialUrl)),
+    ));
   }
 
   @override
@@ -99,30 +109,24 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
   }
 
   Widget _buildWebViewTabs() {
-    return WillPopScope(
-        onWillPop: () async {
-          var browserModel = Provider.of<BrowserModel>(context, listen: false);
-          var webViewModel = browserModel.getCurrentTab()?.webViewModel;
-          var webViewController = webViewModel?.webViewController;
-
-          if (webViewController != null) {
-            if (await webViewController.canGoBack()) {
-              webViewController.goBack();
-              return false;
-            }
+    return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, _) async {
+          if (didPop) {
+            return;
           }
 
-          if (webViewModel != null && webViewModel.tabIndex != null) {
-            setState(() {
-              browserModel.closeTab(webViewModel.tabIndex!);
-            });
-            if (mounted) {
-              FocusScope.of(context).unfocus();
-            }
-            return false;
+          final shouldExit = await _handleMainBackNavigation();
+          if (!shouldExit || !mounted) {
+            return;
           }
 
-          return browserModel.webViewTabs.isEmpty;
+          final navigator = Navigator.of(context);
+          if (navigator.canPop()) {
+            navigator.pop();
+            return;
+          }
+          await SystemNavigator.pop();
         },
         child: Listener(
           onPointerUp: (_) {
@@ -138,6 +142,31 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
                   bottomNavigationBar: const WebViewTabAppBar(),
                   body: _buildWebViewTabsContent())),
         ));
+  }
+
+  Future<bool> _handleMainBackNavigation() async {
+    var browserModel = Provider.of<BrowserModel>(context, listen: false);
+    var webViewModel = browserModel.getCurrentTab()?.webViewModel;
+    var webViewController = webViewModel?.webViewController;
+
+    if (webViewController != null) {
+      if (await webViewController.canGoBack()) {
+        webViewController.goBack();
+        return false;
+      }
+    }
+
+    if (webViewModel != null && webViewModel.tabIndex != null) {
+      setState(() {
+        browserModel.closeTab(webViewModel.tabIndex!);
+      });
+      if (mounted) {
+        FocusScope.of(context).unfocus();
+      }
+      return false;
+    }
+
+    return browserModel.webViewTabs.isEmpty;
   }
 
   Widget _buildWebViewTabsContent() {
@@ -341,10 +370,13 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
 
   Widget _buildWebViewTabsViewer() {
     var browserModel = Provider.of<BrowserModel>(context, listen: true);
-    return WillPopScope(
-        onWillPop: () async {
+    return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, _) {
+          if (didPop) {
+            return;
+          }
           browserModel.showTabScroller = false;
-          return false;
         },
         child: Scaffold(
             appBar: const TabViewerAppBar(),
