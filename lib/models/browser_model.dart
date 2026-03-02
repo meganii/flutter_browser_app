@@ -21,9 +21,9 @@ class BrowserSettings {
   bool debuggingEnabled;
 
   BrowserSettings(
-      {this.searchEngine = GoogleSearchEngine,
-      this.homePageEnabled = false,
-      this.customUrlHomePage = "",
+      {this.searchEngine = CosenseSearchEngine,
+      this.homePageEnabled = true,
+      this.customUrlHomePage = "https://scrapbox.io/",
       this.debuggingEnabled = false});
 
   BrowserSettings copy() {
@@ -35,18 +35,33 @@ class BrowserSettings {
   }
 
   static BrowserSettings? fromMap(Map<String, dynamic>? map) {
-    return map != null
-        ? BrowserSettings(
-            searchEngine: SearchEngines[map["searchEngineIndex"]],
-            homePageEnabled: map["homePageEnabled"],
-            customUrlHomePage: map["customUrlHomePage"],
-            debuggingEnabled: map["debuggingEnabled"])
-        : null;
+    if (map == null) {
+      return null;
+    }
+
+    final dynamic rawIndex = map["searchEngineIndex"];
+    final int? index = rawIndex is int ? rawIndex : int.tryParse("$rawIndex");
+    final bool hasValidIndex =
+        index != null && index >= 0 && index < SearchEngines.length;
+    final String homeUrl =
+        (map["customUrlHomePage"] as String?)?.trim() ?? "https://scrapbox.io/";
+
+    return BrowserSettings(
+        searchEngine:
+            hasValidIndex ? SearchEngines[index] : CosenseSearchEngine,
+        homePageEnabled: map["homePageEnabled"] is bool
+            ? map["homePageEnabled"] as bool
+            : true,
+        customUrlHomePage: homeUrl.isEmpty ? "https://scrapbox.io/" : homeUrl,
+        debuggingEnabled: map["debuggingEnabled"] is bool
+            ? map["debuggingEnabled"] as bool
+            : false);
   }
 
   Map<String, dynamic> toMap() {
+    final searchEngineIndex = SearchEngines.indexOf(searchEngine);
     return {
-      "searchEngineIndex": SearchEngines.indexOf(searchEngine),
+      "searchEngineIndex": searchEngineIndex >= 0 ? searchEngineIndex : 0,
       "homePageEnabled": homePageEnabled,
       "customUrlHomePage": customUrlHomePage,
       "debuggingEnabled": debuggingEnabled

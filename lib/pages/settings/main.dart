@@ -23,7 +23,7 @@ class PopupSettingsMenuActions {
 }
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({super.key});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -71,12 +71,12 @@ class _SettingsPageState extends State<SettingsPage> {
                 onSelected: _popupMenuChoiceAction,
                 itemBuilder: (context) {
                   var items = [
-                    CustomPopupMenuItem<String>(
+                    const CustomPopupMenuItem<String>(
                       enabled: true,
                       value: PopupSettingsMenuActions.RESET_BROWSER_SETTINGS,
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
+                          children: [
                             Text(PopupSettingsMenuActions
                                 .RESET_BROWSER_SETTINGS),
                             Icon(
@@ -85,12 +85,12 @@ class _SettingsPageState extends State<SettingsPage> {
                             )
                           ]),
                     ),
-                    CustomPopupMenuItem<String>(
+                    const CustomPopupMenuItem<String>(
                       enabled: true,
                       value: PopupSettingsMenuActions.RESET_WEBVIEW_SETTINGS,
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
+                          children: [
                             Text(PopupSettingsMenuActions
                                 .RESET_WEBVIEW_SETTINGS),
                             Icon(

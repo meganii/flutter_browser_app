@@ -3,9 +3,8 @@ import 'package:comoreby/app_bar/webview_tab_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class BrowserAppBar extends StatefulWidget implements PreferredSizeWidget {
-  const BrowserAppBar({Key? key})
-      : preferredSize = const Size.fromHeight(kToolbarHeight),
-        super(key: key);
+  const BrowserAppBar({super.key})
+      : preferredSize = const Size.fromHeight(kToolbarHeight);
 
   @override
   State<BrowserAppBar> createState() => _BrowserAppBarState();

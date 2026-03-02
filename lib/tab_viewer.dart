@@ -10,8 +10,7 @@ class ScrollableTab extends StatefulWidget {
   final Function? onTap;
 
   const ScrollableTab(
-      {Key? key, required this.child, this.top = 0.0, this.onTap})
-      : super(key: key);
+      {super.key, required this.child, this.top = 0.0, this.onTap});
 
   @override
   State<ScrollableTab> createState() => _ScrollableTabState();
@@ -51,8 +50,7 @@ class TabViewer extends StatefulWidget {
   final Function(int index)? onTap;
 
   const TabViewer(
-      {Key? key, required this.children, this.onTap, this.currentIndex = 0})
-      : super(key: key);
+      {super.key, required this.children, this.onTap, this.currentIndex = 0});
 
   @override
   State<TabViewer> createState() => _TabViewerState();
@@ -213,12 +211,13 @@ class _TabViewerState extends State<TabViewer>
                 },
                 top: positions[index],
                 child: Transform(
-                  transform: Matrix4.identity()..scale(scale, scale),
+                  transform: Matrix4.identity()
+                    ..scaleByDouble(scale, scale, 1.0, 1.0),
                   alignment: Alignment.topCenter,
                   child: Container(
                       decoration: BoxDecoration(boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(opacity),
+                          color: Colors.black.withValues(alpha: opacity),
                           spreadRadius: 5,
                           blurRadius: 5,
                         ),

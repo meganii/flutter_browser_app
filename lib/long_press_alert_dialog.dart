@@ -93,47 +93,47 @@ class _LongPressAlertDialogState extends State<LongPressAlertDialog> {
     return [];
   }
 
-  Widget _buildLinkTile() {
-    var url =
-        widget.requestFocusNodeHrefResult?.url ?? Uri.parse("about:blank");
-    var faviconUrl = Uri.parse("${url.origin}/favicon.ico");
-
-    var title = widget.requestFocusNodeHrefResult?.title ?? "";
-    if (title.isEmpty) {
-      title = "Link";
-    }
-
-    return ListTile(
-      leading: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          // CachedNetworkImage(
-          //   placeholder: (context, url) => CircularProgressIndicator(),
-          //   imageUrl: widget.requestFocusNodeHrefResult?.src != null ? widget.requestFocusNodeHrefResult!.src : faviconUrl,
-          //   height: 30,
-          // )
-          CustomImage(
-            url: widget.requestFocusNodeHrefResult?.src != null
-                ? Uri.parse(widget.requestFocusNodeHrefResult!.src!)
-                : faviconUrl,
-            maxWidth: 30.0,
-            height: 30.0,
-          )
-        ],
-      ),
-      title: Text(
-        title,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-      ),
-      subtitle: Text(
-        widget.requestFocusNodeHrefResult?.url?.toString() ?? "",
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-      ),
-      isThreeLine: true,
-    );
-  }
+  // Widget _buildLinkTile() {
+  //   var url =
+  //       widget.requestFocusNodeHrefResult?.url ?? Uri.parse("about:blank");
+  //   var faviconUrl = Uri.parse("${url.origin}/favicon.ico");
+  //
+  //   var title = widget.requestFocusNodeHrefResult?.title ?? "";
+  //   if (title.isEmpty) {
+  //     title = "Link";
+  //   }
+  //
+  //   return ListTile(
+  //     leading: Column(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: <Widget>[
+  //         // CachedNetworkImage(
+  //         //   placeholder: (context, url) => CircularProgressIndicator(),
+  //         //   imageUrl: widget.requestFocusNodeHrefResult?.src != null ? widget.requestFocusNodeHrefResult!.src : faviconUrl,
+  //         //   height: 30,
+  //         // )
+  //         CustomImage(
+  //           url: widget.requestFocusNodeHrefResult?.src != null
+  //               ? Uri.parse(widget.requestFocusNodeHrefResult!.src!)
+  //               : faviconUrl,
+  //           maxWidth: 30.0,
+  //           height: 30.0,
+  //         )
+  //       ],
+  //     ),
+  //     title: Text(
+  //       title,
+  //       maxLines: 2,
+  //       overflow: TextOverflow.ellipsis,
+  //     ),
+  //     subtitle: Text(
+  //       widget.requestFocusNodeHrefResult?.url?.toString() ?? "",
+  //       maxLines: 2,
+  //       overflow: TextOverflow.ellipsis,
+  //     ),
+  //     isThreeLine: true,
+  //   );
+  // }
 
   Widget _buildLinkPreview() {
     var browserModel = Provider.of<BrowserModel>(context, listen: true);
@@ -193,22 +193,22 @@ class _LongPressAlertDialogState extends State<LongPressAlertDialog> {
     );
   }
 
-  Widget _buildOpenNewIncognitoTab() {
-    var browserModel = Provider.of<BrowserModel>(context, listen: false);
-
-    return ListTile(
-      title: const Text("Open in a new incognito tab"),
-      onTap: () {
-        browserModel.addTab(WebViewTab(
-          key: GlobalKey(),
-          webViewModel: WebViewModel(
-              url: widget.requestFocusNodeHrefResult?.url,
-              isIncognitoMode: true),
-        ));
-        Navigator.pop(context);
-      },
-    );
-  }
+  // Widget _buildOpenNewIncognitoTab() {
+  //   var browserModel = Provider.of<BrowserModel>(context, listen: false);
+  //
+  //   return ListTile(
+  //     title: const Text("Open in a new incognito tab"),
+  //     onTap: () {
+  //       browserModel.addTab(WebViewTab(
+  //         key: GlobalKey(),
+  //         webViewModel: WebViewModel(
+  //             url: widget.requestFocusNodeHrefResult?.url,
+  //             isIncognitoMode: true),
+  //       ));
+  //       Navigator.pop(context);
+  //     },
+  //   );
+  // }
 
   Widget _buildCopyAddressLink() {
     return ListTile(

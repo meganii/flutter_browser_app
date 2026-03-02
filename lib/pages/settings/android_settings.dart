@@ -6,7 +6,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:provider/provider.dart';
 
 class AndroidSettings extends StatefulWidget {
-  const AndroidSettings({Key? key}) : super(key: key);
+  const AndroidSettings({super.key});
 
   @override
   State<AndroidSettings> createState() => _AndroidSettingsState();
@@ -54,18 +54,19 @@ class _AndroidSettingsState extends State<AndroidSettings> {
           ),
         ),
       ),
-      SwitchListTile(
-        title: const Text("Clear Session Cache"),
-        subtitle: const Text(
-            "Sets whether the WebView should have the session cookie cache cleared before the new window is opened."),
-        value: currentWebViewModel.settings?.clearSessionCache ?? false,
-        onChanged: (value) async {
-          currentWebViewModel.settings?.clearSessionCache = value;
-          webViewController?.setSettings(
-              settings: currentWebViewModel.settings ?? InAppWebViewSettings());
-          currentWebViewModel.settings = await webViewController?.getSettings();
-          browserModel.save();
-          setState(() {});
+      ListTile(
+        title: const Text("Clear Session Cookies"),
+        subtitle: const Text("Remove current session cookies immediately."),
+        trailing: const Icon(Icons.delete_outline),
+        onTap: () async {
+          final cookieManager = CookieManager.instance();
+          await cookieManager.removeSessionCookies();
+          if (!mounted) {
+            return;
+          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Session cookies cleared")),
+          );
         },
       ),
       SwitchListTile(

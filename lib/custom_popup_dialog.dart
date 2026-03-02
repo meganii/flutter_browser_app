@@ -7,13 +7,12 @@ class CustomPopupDialogPageRoute<T> extends MaterialTransparentPageRoute<T> {
   bool isPopped = false;
 
   CustomPopupDialogPageRoute({
-    required WidgetBuilder builder,
+    required super.builder,
     Duration? transitionDuration,
     Color? overlayColor,
-    RouteSettings? settings,
-  })  : overlayColor = overlayColor ?? Colors.black.withOpacity(0.5),
-        customTransitionDuration = transitionDuration,
-        super(builder: builder, settings: settings);
+    super.settings,
+  })  : overlayColor = overlayColor ?? Colors.black.withValues(alpha: 0.5),
+        customTransitionDuration = transitionDuration;
 
   @override
   Duration get transitionDuration => customTransitionDuration != null
@@ -60,10 +59,9 @@ class CustomPopupDialog extends StatefulWidget {
   final Duration transitionDuration;
 
   const CustomPopupDialog(
-      {Key? key,
+      {super.key,
       required this.child,
-      this.transitionDuration = const Duration(milliseconds: 300)})
-      : super(key: key);
+      this.transitionDuration = const Duration(milliseconds: 300)});
 
   @override
   State<StatefulWidget> createState() => _CustomPopupDialogState();
@@ -93,6 +91,7 @@ class _CustomPopupDialogState extends State<CustomPopupDialog>
     with SingleTickerProviderStateMixin {
   late AnimationController _slideController;
   late Animation<Offset> _offsetSlideAnimation;
+  bool _isClosing = false;
 
   @override
   void initState() {
@@ -122,10 +121,13 @@ class _CustomPopupDialogState extends State<CustomPopupDialog>
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        await hideTransition();
-        return true;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop || _isClosing) {
+          return;
+        }
+        await _closeWithAnimation();
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -150,6 +152,14 @@ class _CustomPopupDialogState extends State<CustomPopupDialog>
   }
 
   Future<void> hide() async {
+    await _closeWithAnimation();
+  }
+
+  Future<void> _closeWithAnimation() async {
+    if (_isClosing) {
+      return;
+    }
+    _isClosing = true;
     await hideTransition();
     if (mounted) {
       Navigator.pop(context);

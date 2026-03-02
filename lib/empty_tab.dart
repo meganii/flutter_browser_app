@@ -7,19 +7,17 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:provider/provider.dart';
 
 class EmptyTab extends StatefulWidget {
-  const EmptyTab({Key? key}) : super(key: key);
+  const EmptyTab({super.key});
 
   @override
   State<EmptyTab> createState() => _EmptyTabState();
 }
 
 class _EmptyTabState extends State<EmptyTab> {
-  final _controller = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
-    var browserModel = Provider.of<BrowserModel>(context, listen: true);
-    var settings = browserModel.getSettings();
+    // var browserModel = Provider.of<BrowserModel>(context, listen: true);
+    // var settings = browserModel.getSettings();
 
     return Scaffold(
         body: Padding(

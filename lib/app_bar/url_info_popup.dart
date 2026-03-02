@@ -12,11 +12,10 @@ class UrlInfoPopup extends StatefulWidget {
   final Function()? onWebViewTabSettingsClicked;
 
   const UrlInfoPopup(
-      {Key? key,
+      {super.key,
       required this.route,
       required this.transitionDuration,
-      this.onWebViewTabSettingsClicked})
-      : super(key: key);
+      this.onWebViewTabSettingsClicked});
 
   @override
   State<UrlInfoPopup> createState() => _UrlInfoPopupState();
@@ -108,7 +107,8 @@ class _UrlInfoPopupState extends State<UrlInfoPopup> {
                 style: const TextStyle(color: Colors.blue),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () async {
-                    Navigator.maybePop(context);
+                    final dialogContext = context;
+                    Navigator.maybePop(dialogContext);
 
                     await widget.route.popped;
 
@@ -116,8 +116,11 @@ class _UrlInfoPopupState extends State<UrlInfoPopup> {
                         milliseconds:
                             widget.transitionDuration.inMilliseconds - 200));
 
+                    if (!dialogContext.mounted) {
+                      return;
+                    }
                     showDialog(
-                      context: context,
+                      context: dialogContext,
                       builder: (context) {
                         return const CertificateInfoPopup();
                       },

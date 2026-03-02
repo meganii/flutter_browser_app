@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 class CustomPopupMenuItem<T> extends PopupMenuEntry<T> {
   const CustomPopupMenuItem({
-    Key? key,
+    super.key,
     this.value,
     this.enabled = true,
     this.height = kMinInteractiveDimension,
     this.textStyle,
     this.isIconButtonRow = false,
     required this.child,
-  }) : super(key: key);
+  });
 
   final T? value;
 
