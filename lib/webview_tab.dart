@@ -223,8 +223,31 @@ class _WebViewTabState extends State<WebViewTab> with WidgetsBindingObserver {
         controller.addJavaScriptHandler(
             handlerName: 'handlerCopy',
             callback: (args) async {
-              var text = args[0];
+              var text = args.isNotEmpty ? args[0] : '';
               await Clipboard.setData(ClipboardData(text: text));
+            });
+        controller.addJavaScriptHandler(
+            handlerName: 'readClipboardText',
+            callback: (args) async {
+              try {
+                var data = await Clipboard.getData(Clipboard.kTextPlain);
+                var text = data?.text ?? '';
+                if (text.isEmpty) {
+                  return {
+                    'ok': false,
+                    'error': 'Clipboard is empty',
+                  };
+                }
+                return {
+                  'ok': true,
+                  'text': text,
+                };
+              } catch (error) {
+                return {
+                  'ok': false,
+                  'error': error.toString(),
+                };
+              }
             });
 
         widget.webViewModel.settings = await controller.getSettings();
