@@ -104,7 +104,19 @@
       return;
     }
 
-    var target = document.querySelectorAll(PASTE_PLUS_SELECTOR)[PASTE_PLUS_TARGET_INDEX];
+    var target = '';
+    var menu = [...document.querySelectorAll('#editor .popup-menu')]
+      .find((el) => !el.classList.contains('suggest-popup-menu'));
+
+    if (menu) {
+      target = [...menu.querySelectorAll('.button-container .button')]
+        .find((el) => el.textContent?.trim() === 'Paste');
+
+      if (target) {
+        target.textContent = 'Paste+';
+      }
+    }
+
     if (!(target instanceof HTMLElement)) {
       return;
     }
