@@ -341,20 +341,6 @@ if (window.comoreby && typeof window.comoreby.$command === 'function') {
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(1.0),
-                            child: GestureDetector(
-                              onLongPressEnd: (LongPressEndDetails details) {},
-                              onTap: () async {
-                                await _runComorebyCommand(
-                                    currentTab?.webViewModel.webViewController,
-                                    'backspace');
-                              },
-                              child: const Icon(
-                                Icons.backspace,
-                              ),
-                            ),
-                          ),
                         ],
                       )),
                 ),
