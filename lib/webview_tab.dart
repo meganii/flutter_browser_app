@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:comoreby/comoreby_script_loader.dart';
 import 'package:comoreby/javascript_console_result.dart';
 import 'package:comoreby/long_press_alert_dialog.dart';
 import 'package:comoreby/main.dart';
@@ -30,6 +31,7 @@ class _WebViewTabState extends State<WebViewTab> with WidgetsBindingObserver {
   InAppWebViewController? _webViewController;
   PullToRefreshController? _pullToRefreshController;
   FindInteractionController? _findInteractionController;
+  late final Future<UnmodifiableListView<UserScript>> _initialUserScriptsFuture;
   bool _isWindowClosed = false;
 
   final TextEditingController _httpAuthUsernameController =
@@ -41,6 +43,7 @@ class _WebViewTabState extends State<WebViewTab> with WidgetsBindingObserver {
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
+    _initialUserScriptsFuture = _loadInitialUserScripts();
 
     _pullToRefreshController = kIsWeb
         ? null
@@ -122,13 +125,47 @@ class _WebViewTabState extends State<WebViewTab> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: _buildWebView(),
+    return FutureBuilder<UnmodifiableListView<UserScript>>(
+      future: _initialUserScriptsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return Container(color: Colors.white);
+        }
+
+        return Container(
+          color: Colors.white,
+          child: _buildWebView(
+            initialUserScripts:
+                snapshot.data ?? UnmodifiableListView<UserScript>(const []),
+          ),
+        );
+      },
     );
   }
 
-  InAppWebView _buildWebView() {
+  Future<UnmodifiableListView<UserScript>> _loadInitialUserScripts() async {
+    try {
+      var source = await ComorebyScriptLoader.loadForInjection();
+      if (source.trim().isEmpty) {
+        debugPrint('Comoreby script is empty. Skipping user script injection.');
+        return UnmodifiableListView<UserScript>(const []);
+      }
+
+      return UnmodifiableListView<UserScript>([
+        UserScript(
+          source: source,
+          injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
+        ),
+      ]);
+    } catch (error, stackTrace) {
+      debugPrint('Failed to load comoreby JS asset: $error');
+      debugPrintStack(stackTrace: stackTrace);
+      return UnmodifiableListView<UserScript>(const []);
+    }
+  }
+
+  InAppWebView _buildWebView(
+      {required UnmodifiableListView<UserScript> initialUserScripts}) {
     var browserModel = Provider.of<BrowserModel>(context, listen: true);
     var settings = browserModel.getSettings();
     var currentWebViewModel = Provider.of<WebViewModel>(context, listen: true);
@@ -514,104 +551,7 @@ class _WebViewTabState extends State<WebViewTab> with WidgetsBindingObserver {
           widget.webViewModel.scrollHeight = y;
         } else if (Util.isIOS()) {}
       },
-      initialUserScripts: UnmodifiableListView<UserScript>(
-        [
-          UserScript(source: """
-function comorebyCopy() {
-  const textInput = document.getElementById("text-input");
-  window.flutter_inappwebview.callHandler('handlerCopy', textInput.value);
-}
-
-function comorebyCut() {
-  const textInput = document.getElementById("text-input");
-  window.flutter_inappwebview.callHandler('handlerCopy', textInput.value);
-  const options = {
-    bubbles: true,
-    cancelable: true,
-    keyCode: 8, // Backspace
-  };
-  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
-  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
-}
-
-function comorebyIndent() {
-  const options = {
-    bubbles: true,
-    cancelable: true,
-    keyCode: 39,  // ArrowRight
-    ctrlKey: true,
-  };
-  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
-  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
-}
-
-function comorebyOutdent() {
-  const options = {
-    bubbles: true,
-    cancelable: true,
-    keyCode: 37,  // ArrowLeft
-    ctrlKey: true,
-  };
-  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
-  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
-}
-
-function comorebyUpLines() {
-  const options = {
-    bubbles: true,
-    cancelable: true,
-    keyCode: 38,
-    ctrlKey: true,
-  };
-  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
-  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
-}
-
-function comorebyDownLines() {
-  const options = {
-    bubbles: true,
-    cancelable: true,
-    keyCode: 40,
-    ctrlKey: true,
-  };
-  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
-  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
-}
-
-function comorebyAddIcon() {
-  const options = {
-    bubbles: true,
-    cancelable: true,
-    keyCode: 73,
-    ctrlKey: true,
-  };
-  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
-  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
-}
-
-function comorebyUndo() {
-  const options = {
-    bubbles: true,
-    cancelable: true,
-    keyCode: 90,
-    ctrlKey: true,
-  };
-  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
-  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
-}
-
-function comorebyBackspace() {
-  const options = {
-    bubbles: true,
-    cancelable: true,
-    keyCode: 8,
-  };
-  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keydown", options));
-  document.getElementById("text-input").dispatchEvent(new KeyboardEvent( "keyup", options));
-}
-""", injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START),
-        ],
-      ),
+      initialUserScripts: initialUserScripts,
     );
   }
 

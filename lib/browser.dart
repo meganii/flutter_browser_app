@@ -85,6 +85,19 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
     return _buildBrowser();
   }
 
+  Future<void> _runComorebyCommand(
+      InAppWebViewController? controller, String command) async {
+    if (controller == null) {
+      return;
+    }
+
+    await controller.evaluateJavascript(source: '''
+if (window.comoreby && typeof window.comoreby.$command === 'function') {
+  window.comoreby.$command();
+}
+''');
+  }
+
   Widget _buildBrowser() {
     var currentWebViewModel = Provider.of<WebViewModel>(context, listen: true);
     var browserModel = Provider.of<BrowserModel>(context, listen: true);
@@ -214,8 +227,9 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
                   padding: const EdgeInsets.all(1.0),
                   child: IconButton(
                     onPressed: () async {
-                      currentTab?.webViewModel.webViewController
-                          ?.evaluateJavascript(source: 'comorebyOutdent();');
+                      await _runComorebyCommand(
+                          currentTab?.webViewModel.webViewController,
+                          'outdent');
                     },
                     icon: const Icon(
                       Icons.chevron_left,
@@ -226,8 +240,8 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
                   padding: const EdgeInsets.all(1.0),
                   child: IconButton(
                     onPressed: () async {
-                      currentTab?.webViewModel.webViewController
-                          ?.evaluateJavascript(source: 'comorebyIndent();');
+                      await _runComorebyCommand(
+                          currentTab?.webViewModel.webViewController, 'indent');
                     },
                     icon: const Icon(
                       Icons.chevron_right,
@@ -238,8 +252,9 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
                   padding: const EdgeInsets.all(1.0),
                   child: IconButton(
                     onPressed: () async {
-                      currentTab?.webViewModel.webViewController
-                          ?.evaluateJavascript(source: 'comorebyUpLines();');
+                      await _runComorebyCommand(
+                          currentTab?.webViewModel.webViewController,
+                          'upLines');
                     },
                     icon: const Icon(
                       Icons.expand_less,
@@ -250,8 +265,9 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
                   padding: const EdgeInsets.all(1.0),
                   child: IconButton(
                     onPressed: () async {
-                      currentTab?.webViewModel.webViewController
-                          ?.evaluateJavascript(source: 'comorebyDownLines();');
+                      await _runComorebyCommand(
+                          currentTab?.webViewModel.webViewController,
+                          'downLines');
                     },
                     icon: const Icon(
                       Icons.expand_more,
@@ -271,9 +287,9 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
                             padding: const EdgeInsets.all(1.0),
                             child: IconButton(
                               onPressed: () async {
-                                currentTab?.webViewModel.webViewController
-                                    ?.evaluateJavascript(
-                                        source: 'comorebyCut();');
+                                await _runComorebyCommand(
+                                    currentTab?.webViewModel.webViewController,
+                                    'cut');
                               },
                               icon: const Icon(
                                 Icons.content_cut,
@@ -303,9 +319,9 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
                             padding: const EdgeInsets.all(1.0),
                             child: IconButton(
                               onPressed: () async {
-                                currentTab?.webViewModel.webViewController
-                                    ?.evaluateJavascript(
-                                        source: 'comorebyUndo();');
+                                await _runComorebyCommand(
+                                    currentTab?.webViewModel.webViewController,
+                                    'undo');
                               },
                               icon: const Icon(
                                 Icons.replay,
@@ -316,9 +332,9 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
                             padding: const EdgeInsets.all(1.0),
                             child: IconButton(
                               onPressed: () async {
-                                currentTab?.webViewModel.webViewController
-                                    ?.evaluateJavascript(
-                                        source: 'comorebyAddIcon();');
+                                await _runComorebyCommand(
+                                    currentTab?.webViewModel.webViewController,
+                                    'addIcon');
                               },
                               icon: const Icon(
                                 Icons.face,
@@ -330,9 +346,9 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
                             child: GestureDetector(
                               onLongPressEnd: (LongPressEndDetails details) {},
                               onTap: () async {
-                                currentTab?.webViewModel.webViewController
-                                    ?.evaluateJavascript(
-                                        source: 'comorebyBackspace();');
+                                await _runComorebyCommand(
+                                    currentTab?.webViewModel.webViewController,
+                                    'backspace');
                               },
                               child: const Icon(
                                 Icons.backspace,
