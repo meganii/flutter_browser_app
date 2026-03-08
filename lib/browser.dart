@@ -98,6 +98,76 @@ if (window.comoreby && typeof window.comoreby.$command === 'function') {
 ''');
   }
 
+  Future<void> _openRandomScrapboxPage(
+      InAppWebViewController? webViewController) async {
+    if (webViewController == null) {
+      return;
+    }
+
+    final currentUrl = await webViewController.getUrl();
+    final currentUri = Uri.tryParse(currentUrl.toString());
+    final projectName =
+        (currentUri != null && currentUri.pathSegments.isNotEmpty)
+            ? currentUri.pathSegments.first
+            : '';
+    final projectPathPrefix =
+        projectName.isEmpty ? '' : '/${Uri.encodeComponent(projectName)}/';
+
+    await webViewController.evaluateJavascript(source: '''
+(() => {
+  const randomButton = document.querySelector('.random-jump-button');
+  if (randomButton) {
+    randomButton.click();
+    return;
+  }
+
+  const projectPathPrefix = '$projectPathPrefix';
+  if (!projectPathPrefix) {
+    return;
+  }
+
+  const pageLinks = Array.from(
+    document.querySelectorAll('a[href^="' + projectPathPrefix + '"]')
+  ).filter((a) => {
+    const href = a.getAttribute('href') || '';
+    return href.length > projectPathPrefix.length;
+  });
+
+  if (pageLinks.length === 0) {
+    return;
+  }
+
+  const randomIndex = Math.floor(Math.random() * pageLinks.length);
+  const randomLink = pageLinks[randomIndex];
+  randomLink?.click();
+})()
+''');
+  }
+
+  Widget? _buildRandomJumpFab() {
+    final browserModel = Provider.of<BrowserModel>(context, listen: true);
+    final isKeyboardShown = MediaQuery.of(context).viewInsets.bottom > 0.0;
+    if (!browserModel.showBottomAppBar || isKeyboardShown) {
+      return null;
+    }
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return FloatingActionButton(
+      tooltip: 'Random jump',
+      backgroundColor: colorScheme.secondaryContainer,
+      foregroundColor: colorScheme.onSecondaryContainer,
+      elevation: 8.0,
+      highlightElevation: 12.0,
+      onPressed: () async {
+        await HapticFeedback.lightImpact();
+        final webViewController =
+            browserModel.getCurrentTab()?.webViewModel.webViewController;
+        await _openRandomScrapboxPage(webViewController);
+      },
+      child: const Icon(Icons.shuffle, size: 28.0),
+    );
+  }
+
   Widget _buildBrowser() {
     var currentWebViewModel = Provider.of<WebViewModel>(context, listen: true);
     var browserModel = Provider.of<BrowserModel>(context, listen: true);
@@ -151,9 +221,13 @@ if (window.comoreby && typeof window.comoreby.$command === 'function') {
           },
           child: SafeArea(
               child: Scaffold(
-                  // appBar: const BrowserAppBar(),
-                  bottomNavigationBar: const WebViewTabAppBar(),
-                  body: _buildWebViewTabsContent())),
+            // appBar: const BrowserAppBar(),
+            bottomNavigationBar: const WebViewTabAppBar(),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            floatingActionButton: _buildRandomJumpFab(),
+            body: _buildWebViewTabsContent(),
+          )),
         ));
   }
 

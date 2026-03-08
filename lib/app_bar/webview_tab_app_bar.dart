@@ -202,52 +202,6 @@ class _WebViewTabAppBarState extends State<WebViewTabAppBar>
   //   );
   // }
 
-  Future<void> _openRandomScrapboxPage(
-      InAppWebViewController? webViewController) async {
-    if (webViewController == null) {
-      return;
-    }
-
-    final currentUrl = await webViewController.getUrl();
-    final currentUri = Uri.tryParse(currentUrl.toString());
-    final projectName =
-        (currentUri != null && currentUri.pathSegments.isNotEmpty)
-            ? currentUri.pathSegments.first
-            : '';
-    final projectPathPrefix =
-        projectName.isEmpty ? '' : '/${Uri.encodeComponent(projectName)}/';
-
-    await webViewController.evaluateJavascript(source: '''
-(() => {
-  const randomButton = document.querySelector('.random-jump-button');
-  if (randomButton) {
-    randomButton.click();
-    return;
-  }
-
-  const projectPathPrefix = '$projectPathPrefix';
-  if (!projectPathPrefix) {
-    return;
-  }
-
-  const pageLinks = Array.from(
-    document.querySelectorAll('a[href^="' + projectPathPrefix + '"]')
-  ).filter((a) => {
-    const href = a.getAttribute('href') || '';
-    return href.length > projectPathPrefix.length;
-  });
-
-  if (pageLinks.length === 0) {
-    return;
-  }
-
-  const randomIndex = Math.floor(Math.random() * pageLinks.length);
-  const randomLink = pageLinks[randomIndex];
-  randomLink?.click();
-})()
-''');
-  }
-
   Widget _buildActionsMenu() {
     var browserModel = Provider.of<BrowserModel>(context, listen: true);
     var settings = browserModel.getSettings();
@@ -260,6 +214,8 @@ class _WebViewTabAppBarState extends State<WebViewTabAppBar>
             height: 50,
             child: BottomAppBar(
               color: Colors.grey,
+              shape: const CircularNotchedRectangle(),
+              notchMargin: 6.0,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -280,13 +236,7 @@ class _WebViewTabAppBarState extends State<WebViewTabAppBar>
                       }
                     },
                   ),
-                  IconButton(
-                      padding: const EdgeInsets.all(0.0),
-                      icon: const Icon(Icons.shuffle),
-                      onPressed: () async {
-                        await HapticFeedback.lightImpact();
-                        await _openRandomScrapboxPage(webViewController);
-                      }),
+                  const SizedBox(width: 48.0),
                   Row(
                     children: [
                       settings.homePageEnabled
