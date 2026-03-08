@@ -214,6 +214,8 @@ class _WebViewTabAppBarState extends State<WebViewTabAppBar>
             height: 50,
             child: BottomAppBar(
               color: Colors.grey,
+              shape: const CircularNotchedRectangle(),
+              notchMargin: 6.0,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -234,14 +236,7 @@ class _WebViewTabAppBarState extends State<WebViewTabAppBar>
                       }
                     },
                   ),
-                  IconButton(
-                      padding: const EdgeInsets.all(0.0),
-                      icon: const Icon(Icons.shuffle),
-                      onPressed: () async {
-                        webViewController?.evaluateJavascript(source: '''
-      document.getElementsByClassName('random-jump-button')?.[0].click();
-    ''');
-                      }),
+                  const SizedBox(width: 48.0),
                   Row(
                     children: [
                       settings.homePageEnabled
